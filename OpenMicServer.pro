@@ -10,12 +10,14 @@ CONFIG += c++17
 
 SOURCES += \
     src/main.cpp \
+    src/net/handler.cpp \
     src/net/server.cpp \
     src/openmic.cpp \
     src/settings.cpp \
     src/ui/WindowMain/mainwindow.cpp
 
 HEADERS += \
+    src/net/handler.h \
     src/net/server.h \
     src/openmic.h \
     src/settings.h \
