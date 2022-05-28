@@ -1,16 +1,15 @@
 #ifndef PACKET_H
 #define PACKET_H
 
-#include <QObject>
+#include <QJsonObject>
+#include "../clientmessage.h"
 
-class Packet : public QObject
+class Packet
 {
-    Q_OBJECT
 public:
-    explicit Packet(QObject *parent = nullptr);
-
-signals:
-
+    virtual QString Handle(CLIENT_MESSAGE type, QJsonObject data) = 0;
 };
+
+Q_DECLARE_INTERFACE(Packet, "pl.grzybdev.openmic.server.packet")
 
 #endif // PACKET_H
