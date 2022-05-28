@@ -9,7 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    main.cpp \
+    src/main.cpp \
     src/ui/WindowMain/mainwindow.cpp
 
 HEADERS += \
@@ -19,7 +19,8 @@ FORMS += \
     src/ui/WindowMain/mainwindow.ui
 
 TRANSLATIONS += \
-    OpenMicServer_pl_PL.ts
+    src/lang/OpenMicServer_pl_PL.ts
+
 CONFIG += lrelease
 CONFIG += embed_translations
 
