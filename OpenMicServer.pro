@@ -21,7 +21,8 @@ HEADERS += \
     src/net/server.h \
     src/openmic.h \
     src/settings.h \
-    src/ui/WindowMain/mainwindow.h
+    src/ui/WindowMain/mainwindow.h \
+    src/utils.h
 
 FORMS += \
     src/ui/WindowMain/mainwindow.ui

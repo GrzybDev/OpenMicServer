@@ -2,6 +2,7 @@
 
 #include <QIntValidator>
 #include <QMessageBox>
+#include "utils.h"
 
 Settings::Settings(QObject *parent)
     : QObject{parent}

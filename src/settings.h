@@ -30,18 +30,4 @@ private:
     QString getDefaultNetworkAdapter();
 };
 
-uint constexpr qConstHash(const char *string)
-{
-    uint h = 0;
-
-    while (*string != 0)
-    {
-        h = (h << 4) + *string++;
-        h ^= (h & 0xf0000000) >> 23;
-        h &= 0x0fffffff;
-    }
-
-    return h;
-}
-
 #endif // SETTINGS_H
