@@ -4,6 +4,7 @@ OpenMic::OpenMic(QObject *parent)
     : QObject{parent}
 {
     appSettings = new Settings(this);
+    server = new Server(this);
 
     RestartServer();
 }
@@ -20,10 +21,12 @@ void OpenMic::StartServer(bool isPublic)
 {
     QString srvName;
     QHostAddress addr;
+    Server::CONNECTOR connector;
 
     if (isPublic)
     {
         srvName = "OpenMic Server (Wi-Fi)";
+        connector = Server::WIFI;
 
         QNetworkInterface iface = appSettings->GetNetworkInterface();
         QList<QNetworkAddressEntry> addrEntries = iface.addressEntries();
@@ -50,6 +53,7 @@ void OpenMic::StartServer(bool isPublic)
     } else {
         srvName = "OpenMic Server (USB)";
         addr = QHostAddress::LocalHost;
+        connector = Server::USB;
     }
 
     QWebSocketServer* webSocket = new QWebSocketServer(srvName, QWebSocketServer::NonSecureMode, this);
@@ -57,11 +61,14 @@ void OpenMic::StartServer(bool isPublic)
 
     if (webSocket->listen(addr, port))
     {
-        qDebug() << "Server is now listening on " << addr << ":" << port;
+        qDebug() << "Server is now listening on" << addr << ":" << port;
+
+        connect(webSocket, &QWebSocketServer::newConnection, server, [=]() { server->onNewConnection(webSocket, connector); });
+        connect(webSocket, &QWebSocketServer::closed, server, &Server::onClosed);
     }
     else
     {
-        qDebug() << "Failed to start server on " << addr << ":" << port << "(" << webSocket->errorString() << ")";
+        qDebug() << "Failed to start server on" << addr << ":" << port << "(" << webSocket->errorString() << ")";
         // TODO: Handle failure
     }
 

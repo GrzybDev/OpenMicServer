@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QWebSocketServer>
 #include "settings.h"
+#include "net/server.h"
 
 class OpenMic : public QObject
 {
@@ -16,6 +17,7 @@ public:
 signals:
 private:
     Settings* appSettings;
+    Server* server;
 
     QList<QWebSocketServer*> webSockets;
 
