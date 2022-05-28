@@ -23,6 +23,7 @@ HEADERS += \
     src/net/packets/client/packetclientsystem.h \
     src/net/packets/packet.h \
     src/net/server.h \
+    src/net/servermessage.h \
     src/openmic.h \
     src/settings.h \
     src/ui/WindowMain/mainwindow.h \
