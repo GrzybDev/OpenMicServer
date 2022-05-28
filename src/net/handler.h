@@ -2,6 +2,10 @@
 #define HANDLER_H
 
 #include <QObject>
+#include <QJsonObject>
+
+#include "packets/client/packetclientsystem.h"
+#include "./servermessage.h"
 
 class Handler : public QObject
 {
@@ -9,8 +13,13 @@ class Handler : public QObject
 public:
     explicit Handler(QObject *parent = nullptr);
 
-signals:
+    QString HandleCommand(QJsonObject msg);
+    static QString GetResponse(SERVER_MESSAGE type, QJsonObject data);
 
+private:
+    CLIENT_MESSAGE getMessageType(QString type);
+
+    PacketClientSystem *cSystem;
 };
 
 #endif // HANDLER_H
