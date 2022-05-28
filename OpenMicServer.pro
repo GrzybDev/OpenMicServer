@@ -11,10 +11,12 @@ CONFIG += c++17
 SOURCES += \
     src/main.cpp \
     src/openmic.cpp \
+    src/settings.cpp \
     src/ui/WindowMain/mainwindow.cpp
 
 HEADERS += \
     src/openmic.h \
+    src/settings.h \
     src/ui/WindowMain/mainwindow.h
 
 FORMS += \
