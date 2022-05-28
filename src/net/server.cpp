@@ -1,11 +1,13 @@
 #include "server.h"
 
 #include <QWebSocket>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 Server::Server(QObject *parent)
     : QObject{parent}
 {
-
+    handler = new Handler(this);
 }
 
 void Server::onNewConnection(QWebSocketServer* context, Server::CONNECTOR connector)
@@ -21,7 +23,7 @@ void Server::onNewConnection(QWebSocketServer* context, Server::CONNECTOR connec
 
     isClientConnected = true;
 
-    qDebug() << "Client connected (Connection type:%1" << connector << ")";
+    qDebug() << "Client connected (Connection type:" << connector << ")";
 
     connect(pSocket, &QWebSocket::textMessageReceived, this, &Server::processCommand);
     connect(pSocket, &QWebSocket::binaryMessageReceived, this, &Server::processAudioData);
@@ -35,9 +37,27 @@ void Server::onClosed()
 
 void Server::processCommand(QString message)
 {
-    // QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
+    QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
 
-    qDebug() << "Received command:" << message;
+    qDebug() << "<--" << message;
+
+    QJsonDocument jsonCommand = QJsonDocument::fromJson(message.toUtf8());
+
+    if (jsonCommand.isNull()) {
+        qDebug() << "Received invalid text data! Disconnecting...";
+        pClient->close(QWebSocketProtocol::CloseCodeProtocolError, tr("Invalid text data, disconnecting..."));
+    } else {
+        QJsonObject jsonObject = jsonCommand.object();
+        QString response = handler->HandleCommand(jsonObject);
+
+        if (response == "") {
+            qDebug() << "No response generated. Disconnecting...";
+            pClient->close(QWebSocketProtocol::CloseCodeBadOperation, tr("Invalid text data, disconnecting..."));
+        } else {
+            qDebug() << "-->" << response;
+            pClient->sendTextMessage(response);
+        }
+    }
 }
 
 void Server::processAudioData(QByteArray message)

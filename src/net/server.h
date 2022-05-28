@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QWebSocketServer>
+#include "handler.h"
 
 class Server : public QObject
 {
@@ -27,6 +28,7 @@ public slots:
 
 private:
     QWebSocketServer* context;
+    Handler* handler;
 
     bool isClientConnected = false;
 };
