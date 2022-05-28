@@ -1,0 +1,112 @@
+name: Release Build
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build_linux:
+    name: Build for Linux
+    permissions: write-all
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: 6.2.4
+    
+    - name: Install CQTDeployer
+      run: |
+        sudo snap install cqtdeployer
+        sudo snap connect cqtdeployer:process-control
+        sudo snap connect cqtdeployer:removable-media
+        sudo snap connect cqtdeployer:system-backup
+    
+    - name: Build
+      run: |
+        qmake CONFIG+=release
+        make
+        cqtdeployer -bin OpenMicServer
+
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.3.1
+      with:
+        name: LinuxBuild
+        path: DistributionKit/
+    
+    - name: Pack release
+      run: |
+        rm -rfv ./DistributionKit
+        cqtdeployer -bin OpenMicServer zip
+    
+    - name: Upload installers to release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ./DistributionKit/*
+    
+    - name: Build Installers
+      run: |
+        rm -rfv ./DistributionKit
+        cqtdeployer -bin OpenMicServer qif
+        cqtdeployer -bin OpenMicServer deb
+    
+    - name: Upload installers to release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ./DistributionKit/*
+    
+  build_windows:
+    name: Build for Windows
+    permissions: write-all
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        tools: 'tools_ifw'
+        version: 6.2.4
+
+    - name: Set up Visual Studio shell
+      uses: egor-tensin/vs-shell@v2
+      with:
+        arch: x64
+    
+    - name: Build
+      shell: cmd
+      run: |
+        qmake CONFIG+=release
+        nmake
+        mkdir out
+        copy release\OpenMicServer.exe out\OpenMicServer.exe
+        windeployqt out\OpenMicServer.exe
+    
+    - name: Compress build
+      run: Compress-Archive -Path .\out\* -DestinationPath OpenMicServer_Windows_Portable.zip
+
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.3.1
+      with:
+        name: WindowsBuild
+        path: out
+    
+    - name: Create installer
+      shell: cmd
+      run: |
+        mkdir packages\pl.grzybdev.openmic.server\data
+        mkdir packages\pl.grzybdev.openmic.server.redist.vc\data
+        xcopy out\* packages\pl.grzybdev.openmic.server\data /E
+        move packages\pl.grzybdev.openmic.server\data\vc_redist* packages\pl.grzybdev.openmic.server.redist.vc\data\
+        %IQTA_TOOLS%\QtInstallerFramework\4.3\bin\binarycreator.exe --offline-only -c .\installer.xml -p packages --verbose OpenMicServer_Windows_Setup.exe
+    
+    - name: Upload installer to release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ./OpenMicServer_Windows_Setup.exe
+          ./OpenMicServer_Windows_Portable.zip

@@ -1,0 +1,71 @@
+name: Development Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build_linux:
+    name: Build for Linux
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: 6.2.4
+    
+    - name: Install CQTDeployer
+      run: |
+        sudo snap install cqtdeployer
+        sudo snap connect cqtdeployer:process-control
+        sudo snap connect cqtdeployer:removable-media
+        sudo snap connect cqtdeployer:system-backup
+    
+    - name: Build
+      run: |
+        qmake CONFIG+=debug
+        make
+        cqtdeployer -bin OpenMicServer 
+
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.3.1
+      with:
+        name: LinuxBuild
+        path: DistributionKit/
+        
+  build_windows:
+    name: Build for Windows
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: 6.2.4
+
+    - name: Set up Visual Studio shell
+      uses: egor-tensin/vs-shell@v2
+      with:
+        arch: x64
+    
+    - name: Build
+      shell: cmd
+      run: |
+        qmake CONFIG+=debug
+        nmake
+        mkdir out
+        copy debug\OpenMicServer.exe out\OpenMicServer.exe
+        windeployqt out\OpenMicServer.exe
+
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.3.1
+      with:
+        name: WindowsBuild
+        path: out
