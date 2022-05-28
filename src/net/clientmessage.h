@@ -1,0 +1,4 @@
+#ifndef CLIENTMESSAGE_H
+#define CLIENTMESSAGE_H
+
+#endif // CLIENTMESSAGE_H
