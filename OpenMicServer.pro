@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     src/main.cpp \
     src/net/handler.cpp \
+    src/net/packets/client/packetclientsystem.cpp \
     src/net/packets/packet.cpp \
     src/net/server.cpp \
     src/openmic.cpp \
@@ -19,6 +20,7 @@ SOURCES += \
 
 HEADERS += \
     src/net/handler.h \
+    src/net/packets/client/packetclientsystem.h \
     src/net/packets/packet.h \
     src/net/server.h \
     src/openmic.h \
