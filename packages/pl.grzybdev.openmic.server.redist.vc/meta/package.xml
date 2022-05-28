@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<Package>
+    <DisplayName>Microsoft Visual C++ Redistributable Package</DisplayName>
+    <DisplayName xml:lang="pl_PL">Pakiet Redystrybucyjny Microsoft Visual C++</DisplayName>
+    <Description>Libraries required by OpenMic Server and many other applications that are built by using Microsoft C and C++ tools.</Description>
+    <Description xml:lang="pl">Biblioteki wymagane przez Serwer OpenMic oraz wiele innych aplikacji które zostały zbudowane używają narzędzi Microsoft C oraz C++.</Description>
+    <Version>0</Version>
+    <ReleaseDate></ReleaseDate>
+    <AutoDependOn>pl.grzybdev.openmic.server</AutoDependOn>
+    <Script>installscript.qs</Script>
+</Package>

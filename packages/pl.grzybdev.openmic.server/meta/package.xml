@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<Package>
+    <DisplayName>OpenMic Server</DisplayName>
+    <DisplayName xml:lang="pl_PL">Serwer OpenMic</DisplayName>
+    <Description>Base application (required)</Description>
+    <Description xml:lang="pl">Podstawowa aplikacja (wymagana)</Description>
+    <Version>1</Version>
+    <ReleaseDate></ReleaseDate>
+    <Licenses>
+        <License name="License Agreement" file="LICENSE.md" />
+    </Licenses>
+    <Default>true</Default>
+    <Essential>true</Essential>
+    <ForcedInstallation>true</ForcedInstallation>
+    <ForcedUpdate>true</ForcedUpdate>
+    <Script>installscript.qs</Script>
+</Package>

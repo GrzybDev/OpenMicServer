@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>OpenMic Server</Name>
+    <Version>0.0.0.1</Version>
+    <Title>OpenMic Server</Title>
+    <Publisher>GrzybDev</Publisher>
+    <!-- Directory name is used in component.xml -->
+    <StartMenuDir>GrzybDev/OpenMic</StartMenuDir>
+    <TargetDir>@ApplicationsDirX64@/GrzybDev/OpenMic Server</TargetDir>
+</Installer>

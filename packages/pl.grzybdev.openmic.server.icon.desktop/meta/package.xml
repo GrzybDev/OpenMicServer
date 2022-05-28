@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<Package>
+    <DisplayName>Desktop Shortcut</DisplayName>
+    <DisplayName xml:lang="pl_PL">Ikona na pulpicie</DisplayName>
+    <Version>0</Version>
+    <ReleaseDate></ReleaseDate>
+    <Script>installscript.qs</Script>
+</Package>
