@@ -12,7 +12,6 @@ SOURCES += \
     src/main.cpp \
     src/net/handler.cpp \
     src/net/packets/client/packetclientsystem.cpp \
-    src/net/packets/packet.cpp \
     src/net/server.cpp \
     src/openmic.cpp \
     src/settings.cpp \
