@@ -28,3 +28,10 @@ CONFIG += embed_translations
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RC_ICONS = src/res/appIcon.ico
+QMAKE_TARGET_COMPANY = GrzybDev
+QMAKE_TARGET_DESCRIPTION = OpenMic Server
+QMAKE_TARGET_COPYRIGHT = Marek Grzyb (@GrzybDev)
+QMAKE_TARGET_PRODUCT = OpenMic
+VERSION = 0.0.0.1
