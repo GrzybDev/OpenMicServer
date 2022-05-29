@@ -9,6 +9,10 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
+    QCoreApplication::setOrganizationName("GrzybDev");
+    QCoreApplication::setOrganizationDomain("grzyb.dev");
+    QCoreApplication::setApplicationName("OpenMic Server");
+
     QTranslator appTranslator;
     QTranslator qtTranslator;
 
