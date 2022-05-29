@@ -37,13 +37,14 @@ QString PacketSystem::handleHello(QJsonObject data)
             clientValid = true;
     }
     else if (clientApp != "pl.grzybdev.openmic.client")
-        clientValid = true;
+        clientValid = true; // Ignore version if not official app
 
     if (clientValid) {
         response["serverApp"] = QCoreApplication::applicationName();
         response["serverVersion"] = QCoreApplication::applicationVersion();
         response["serverOS"] = QSysInfo::kernelType();
         response["serverName"] = QSysInfo::machineHostName();
+        response["serverID"] = appSettings->Get(DEVICE_ID).toString();
     }
     else
     {
