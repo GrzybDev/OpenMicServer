@@ -3,10 +3,19 @@
 #include <QIntValidator>
 #include <QMessageBox>
 #include "utils.h"
+#include <QUuid>
+#include <QCoreApplication>
 
 Settings::Settings(QObject *parent)
     : QObject{parent}
 {
+    if (Get(DEVICE_ID).toString() == "") {
+        QUuid newUuid = QUuid::createUuid();
+        Set(DEVICE_ID, newUuid.toString(QUuid::WithoutBraces));
+        qDebug() << "Device ID wasn't present in config, generated new one:" << newUuid;
+    }
+
+    qDebug() << "Device ID:" << Get(DEVICE_ID).toString();
     validateCommunicationPort();
 }
 
@@ -23,6 +32,8 @@ QVariant Settings::GetDefault(QString key)
             return 10000;
         case qConstHash(NETWORK_INTERFACE):
             return getDefaultNetworkAdapter();
+        case qConstHash(DEVICE_ID):
+            return "";
         default:
             return QVariant();
     }
@@ -32,6 +43,11 @@ QNetworkInterface Settings::GetNetworkInterface()
 {
     QString ifaceName = Get(NETWORK_INTERFACE).toString();
     return QNetworkInterface::interfaceFromName(ifaceName);
+}
+
+void Settings::Set(QString key, QVariant value)
+{
+    ctx.setValue(key, value);
 }
 
 void Settings::Reset(QString key)

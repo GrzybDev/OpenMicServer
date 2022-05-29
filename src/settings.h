@@ -7,6 +7,7 @@
 
 #define NETWORK_INTERFACE "network/interface"
 #define NETWORK_PORT "network/port"
+#define DEVICE_ID "deviceID"
 
 #define PORT_MIN 1024
 #define PORT_MAX 65535
@@ -21,6 +22,7 @@ public:
     QVariant GetDefault(QString key);
     QNetworkInterface GetNetworkInterface();
 
+    void Set(QString key, QVariant value);
     void Reset(QString key);
 
 private:
