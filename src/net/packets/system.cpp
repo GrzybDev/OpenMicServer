@@ -1,16 +1,16 @@
-#include "packetclientsystem.h"
+#include "system.h"
 
 #include <QCoreApplication>
-#include "../../handler.h"
+#include "../handler.h"
 #include <QSysInfo>
 
-PacketClientSystem::PacketClientSystem(QObject *parent)
+PacketSystem::PacketSystem(QObject *parent)
     : QObject{parent}
 {
 
 }
 
-QString PacketClientSystem::Handle(CLIENT_MESSAGE type, QJsonObject data)
+QString PacketSystem::Handle(CLIENT_MESSAGE type, QJsonObject data)
 {
     switch (type) {
         case CLIENT_SYSTEM_HELLO:
@@ -20,7 +20,7 @@ QString PacketClientSystem::Handle(CLIENT_MESSAGE type, QJsonObject data)
     }
 }
 
-QString PacketClientSystem::handleHello(QJsonObject data)
+QString PacketSystem::handleHello(QJsonObject data)
 {
     QString clientApp = data.value("clientApp").toString();
     QString clientVersion = data.value("clientVersion").toString();

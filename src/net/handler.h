@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QJsonObject>
 
-#include "packets/client/packetclientsystem.h"
+#include "packets/system.h"
 #include "./servermessage.h"
 
 class Handler : public QObject
@@ -19,7 +19,7 @@ public:
 private:
     CLIENT_MESSAGE getMessageType(QString type);
 
-    PacketClientSystem *cSystem;
+    PacketSystem *pSystem;
 };
 
 #endif // HANDLER_H

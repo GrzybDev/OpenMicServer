@@ -5,7 +5,7 @@
 Handler::Handler(QObject *parent)
     : QObject{parent}
 {
-    cSystem = new PacketClientSystem(this);
+    pSystem = new PacketSystem(this);
 }
 
 QString Handler::HandleCommand(QJsonObject msg)
@@ -15,7 +15,7 @@ QString Handler::HandleCommand(QJsonObject msg)
 
     switch (messageType) {
         case CLIENT_SYSTEM_HELLO:
-            return cSystem->Handle(messageType, msg);
+            return pSystem->Handle(messageType, msg);
         default:
             return "";
     }
