@@ -2,7 +2,7 @@
 #define PACKET_H
 
 #include <QJsonObject>
-#include "../clientmessage.h"
+#include "clientmessage.h"
 
 class Packet
 {
