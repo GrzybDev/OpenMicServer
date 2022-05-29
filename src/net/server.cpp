@@ -4,10 +4,10 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-Server::Server(QObject *parent)
+Server::Server(QObject *parent, Settings *settings)
     : QObject{parent}
 {
-    handler = new Handler(this);
+    handler = new Handler(this, settings);
 }
 
 void Server::onNewConnection(QWebSocketServer* context, Server::CONNECTOR connector)

@@ -4,10 +4,10 @@
 #include "../handler.h"
 #include <QSysInfo>
 
-PacketSystem::PacketSystem(QObject *parent)
+PacketSystem::PacketSystem(QObject *parent, Settings *settings)
     : QObject{parent}
 {
-
+    appSettings = settings;
 }
 
 QString PacketSystem::Handle(CLIENT_MESSAGE type, QJsonObject data)

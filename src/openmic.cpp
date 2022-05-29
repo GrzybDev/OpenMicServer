@@ -4,7 +4,7 @@ OpenMic::OpenMic(QObject *parent)
     : QObject{parent}
 {
     appSettings = new Settings(this);
-    server = new Server(this);
+    server = new Server(this, appSettings);
 
     RestartServer();
 }
