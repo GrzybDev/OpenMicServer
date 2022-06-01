@@ -15,6 +15,7 @@ SOURCES += \
     src/net/server.cpp \
     src/openmic.cpp \
     src/settings.cpp \
+    src/ui/DialogDeviceAuth/deviceauthdialog.cpp \
     src/ui/WindowMain/mainwindow.cpp
 
 HEADERS += \
@@ -26,10 +27,12 @@ HEADERS += \
     src/net/servermessage.h \
     src/openmic.h \
     src/settings.h \
+    src/ui/DialogDeviceAuth/deviceauthdialog.h \
     src/ui/WindowMain/mainwindow.h \
     src/utils.h
 
 FORMS += \
+    src/ui/DialogDeviceAuth/deviceauthdialog.ui \
     src/ui/WindowMain/mainwindow.ui
 
 TRANSLATIONS += \
