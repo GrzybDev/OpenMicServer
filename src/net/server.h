@@ -4,13 +4,22 @@
 #include <QObject>
 #include <QWebSocketServer>
 #include "handler.h"
-#include "../settings.h"
 
 class Server : public QObject
 {
     Q_OBJECT
 public:
-    explicit Server(QObject *parent = nullptr, Settings *settings = nullptr);
+    explicit Server(QObject *parent = nullptr);
+    Server(const Server&) {}
+
+    static Server & getInstance() {
+        static Server * _instance = 0;
+
+        if ( _instance == 0 )
+            _instance = new Server();
+
+        return *_instance;
+    }
 
     enum CONNECTOR
     {
