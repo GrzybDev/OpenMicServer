@@ -3,6 +3,9 @@
 
 #include <QDialog>
 
+#define PAIR_NUM_MIN 1000
+#define PAIR_NUM_MAX 999999
+
 namespace Ui {
 class DeviceAuthDialog;
 }
@@ -17,6 +20,9 @@ public:
 
 private:
     Ui::DeviceAuthDialog *ui;
+
+    void generateCode();
+    int generatedCode;
 };
 
 #endif // DEVICEAUTHDIALOG_H
