@@ -12,20 +12,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    
+
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
         modules: 'qtwebsockets'
         version: 6.2.4
-    
+
     - name: Install CQTDeployer
       run: |
         sudo snap install cqtdeployer
         sudo snap connect cqtdeployer:process-control
         sudo snap connect cqtdeployer:removable-media
         sudo snap connect cqtdeployer:system-backup
-    
+
     - name: Build
       run: |
         qmake CONFIG+=release
@@ -37,28 +37,28 @@ jobs:
       with:
         name: LinuxBuild
         path: DistributionKit/
-    
+
     - name: Pack release
       run: |
         rm -rfv ./DistributionKit
         cqtdeployer -bin OpenMicServer zip
-    
+
     - name: Upload installers to release
       uses: softprops/action-gh-release@v1
       with:
         files: ./DistributionKit/*
-    
+
     - name: Build Installers
       run: |
         rm -rfv ./DistributionKit
         cqtdeployer -bin OpenMicServer qif
         cqtdeployer -bin OpenMicServer deb
-    
+
     - name: Upload installers to release
       uses: softprops/action-gh-release@v1
       with:
         files: ./DistributionKit/*
-    
+
   build_windows:
     name: Build for Windows
     permissions: write-all
@@ -66,7 +66,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    
+
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
@@ -78,7 +78,7 @@ jobs:
       uses: egor-tensin/vs-shell@v2
       with:
         arch: x64
-    
+
     - name: Build
       shell: cmd
       run: |
@@ -87,7 +87,7 @@ jobs:
         mkdir out
         copy release\OpenMicServer.exe out\OpenMicServer.exe
         windeployqt out\OpenMicServer.exe
-    
+
     - name: Compress build
       run: Compress-Archive -Path .\out\* -DestinationPath OpenMicServer_Windows_Portable.zip
 
@@ -96,7 +96,7 @@ jobs:
       with:
         name: WindowsBuild
         path: out
-    
+
     - name: Create installer
       shell: cmd
       run: |
@@ -105,7 +105,7 @@ jobs:
         xcopy out\* packages\pl.grzybdev.openmic.server\data /E
         move packages\pl.grzybdev.openmic.server\data\vc_redist* packages\pl.grzybdev.openmic.server.redist.vc\data\
         %IQTA_TOOLS%\QtInstallerFramework\4.3\bin\binarycreator.exe --offline-only -c .\installer.xml -p packages --verbose OpenMicServer_Windows_Setup.exe
-    
+
     - name: Upload installer to release
       uses: softprops/action-gh-release@v1
       with:
