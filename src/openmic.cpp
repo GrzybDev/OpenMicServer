@@ -3,8 +3,8 @@
 OpenMic::OpenMic(QObject *parent)
     : QObject{parent}
 {
-    appSettings = new Settings(this);
-    server = new Server(this, appSettings);
+    appSettings = & Settings::getInstance();
+    server = & Server::getInstance();
 
     RestartServer();
 }

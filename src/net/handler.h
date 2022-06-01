@@ -6,13 +6,12 @@
 
 #include "packets/system.h"
 #include "./servermessage.h"
-#include "../settings.h"
 
 class Handler : public QObject
 {
     Q_OBJECT
 public:
-    explicit Handler(QObject *parent = nullptr, Settings *settings = nullptr);
+    explicit Handler(QObject *parent = nullptr);
 
     QString HandleCommand(QJsonObject msg);
     static QString GetResponse(SERVER_MESSAGE type, QJsonObject data);

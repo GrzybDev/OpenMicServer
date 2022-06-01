@@ -11,7 +11,7 @@ class PacketSystem : public QObject, public Packet
     Q_INTERFACES(Packet)
 
 public:
-    explicit PacketSystem(QObject *parent = nullptr, Settings *settings = nullptr);
+    explicit PacketSystem(QObject *parent = nullptr);
 
     QString Handle(CLIENT_MESSAGE type, QJsonObject data);
 

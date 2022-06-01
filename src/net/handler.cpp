@@ -2,10 +2,10 @@
 #include "../utils.h"
 #include <QJsonDocument>
 
-Handler::Handler(QObject *parent, Settings *settings)
+Handler::Handler(QObject *parent)
     : QObject{parent}
 {
-    pSystem = new PacketSystem(this, settings);
+    pSystem = new PacketSystem(this);
 }
 
 QString Handler::HandleCommand(QJsonObject msg)
