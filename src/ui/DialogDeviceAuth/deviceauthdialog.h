@@ -2,6 +2,7 @@
 #define DEVICEAUTHDIALOG_H
 
 #include <QDialog>
+#include "../../net/server.h"
 
 #define PAIR_NUM_MIN 1000
 #define PAIR_NUM_MAX 999999
@@ -20,9 +21,13 @@ public:
 
 private:
     Ui::DeviceAuthDialog *ui;
+    Server* server;
 
     void generateCode();
     int generatedCode;
+
+private slots:
+    void onAuthCodeReceived(int authCode);
 };
 
 #endif // DEVICEAUTHDIALOG_H
