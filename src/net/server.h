@@ -35,7 +35,7 @@ public slots:
     void processCommand(QString message);
     void processAudioData(QByteArray message);
     void socketDisconnected();
-
+    void ping();
 private:
     QWebSocketServer* context;
     Handler* handler;

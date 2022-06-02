@@ -8,6 +8,9 @@ Server::Server(QObject *parent)
     : QObject{parent}
 {
     handler = new Handler(this);
+
+    pingTimer = new QTimer(this);
+    connect(pingTimer, &QTimer::timeout, this, &Server::ping);
 }
 
 void Server::onNewConnection(QWebSocketServer* context, Server::CONNECTOR connector)
@@ -22,12 +25,16 @@ void Server::onNewConnection(QWebSocketServer* context, Server::CONNECTOR connec
     }
 
     isClientConnected = true;
+    connectedClient = pSocket;
 
     qDebug() << "Client connected (Connection type:" << connector << ")";
 
     connect(pSocket, &QWebSocket::textMessageReceived, this, &Server::processCommand);
     connect(pSocket, &QWebSocket::binaryMessageReceived, this, &Server::processAudioData);
     connect(pSocket, &QWebSocket::disconnected, this, &Server::socketDisconnected);
+
+    Settings* settings = &Settings::getInstance();
+    pingTimer->start(settings->Get(NETWORK_PING_INTERVAL).toUInt());
 }
 
 void Server::onClosed()
@@ -76,5 +83,14 @@ void Server::socketDisconnected()
     if (pClient) {
         isClientConnected = false;
         pClient->deleteLater();
+    }
+}
+
+void Server::ping()
+{
+    if (isClientConnected) {
+        connectedClient->ping();
+    } else {
+        pingTimer->stop();
     }
 }
