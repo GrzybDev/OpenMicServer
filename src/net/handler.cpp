@@ -44,7 +44,7 @@ QString Handler::GetResponse(MESSAGE type, QJsonObject data)
             data["type"] = "System_Goodbye";
             break;
         default:
-            throw std::exception("Unknown message type specified!");
+            break;
     }
 
     QJsonDocument response(data);
