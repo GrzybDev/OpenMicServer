@@ -105,3 +105,23 @@ void Server::ping()
         pingTimer->stop();
     }
 }
+
+void Server::serverDisconnect(EXIT_CODE exitCode)
+{
+    if (isClientConnected) {
+        QJsonObject data;
+        data["exitCode"] = exitCode;
+
+        QString packet = Handler::GetResponse(SYSTEM_GOODBYE, data);
+        connectedClient->sendTextMessage(packet);
+
+        clientDisconnect();
+    }
+}
+
+void Server::clientDisconnect()
+{
+    if (isClientConnected) {
+        connectedClient->close();
+    }
+}

@@ -5,6 +5,7 @@
 #include <QWebSocketServer>
 #include <QTimer>
 #include "handler.h"
+#include "exitcode.h"
 
 class Server : public QObject
 {
@@ -32,6 +33,9 @@ public:
     Handler* handler;
 
     void sendMessage(QString message);
+
+    void serverDisconnect(EXIT_CODE exitCode);
+    void clientDisconnect();
 
 public slots:
     void onNewConnection(QWebSocketServer* context, Server::CONNECTOR connector);

@@ -2,6 +2,7 @@
 #include "ui_deviceauthdialog.h"
 
 #include <QRandomGenerator>
+#include "../../net/exitcode.h"
 
 DeviceAuthDialog::DeviceAuthDialog(QWidget *parent) :
     QDialog(parent),
@@ -10,6 +11,7 @@ DeviceAuthDialog::DeviceAuthDialog(QWidget *parent) :
     server = &Server::getInstance();
     ui->setupUi(this);
 
+    connect(this, SIGNAL(rejected()), SLOT(onReject()));
     connect(server->handler, SIGNAL(onAuthCodeReceived(int)), this, SLOT(onAuthCodeReceived(int)));
 
     generateCode();
@@ -35,4 +37,12 @@ void DeviceAuthDialog::onAuthCodeReceived(int authCode)
     if (authCode == generatedCode) {
         qDebug() << "Received authCode is correct!";
     }
+}
+
+void DeviceAuthDialog::onReject()
+{
+    qDebug() << "Auth dialog has been rejected";
+
+    Server* server = &Server::getInstance();
+    server->serverDisconnect(CANCELED_AUTH_CODE_DIALOG);
 }

@@ -17,6 +17,8 @@ QString PacketSystem::Handle(MESSAGE type, QJsonObject data)
     switch (type) {
         case SYSTEM_HELLO:
             return handleHello(data);
+        case SYSTEM_GOODBYE:
+            return handleGoodbye(data);
         default:
             return "";
     }
@@ -68,4 +70,24 @@ QString PacketSystem::handleHello(QJsonObject data)
     }
 
     return Handler::GetResponse(SYSTEM_HELLO, response);
+}
+
+QString PacketSystem::handleGoodbye(QJsonObject data)
+{
+    int exitCodeInt = data.value("exitCode").toInt();
+    EXIT_CODE exitCode = static_cast<EXIT_CODE>(exitCodeInt);
+
+    switch (exitCode)
+    {
+        case NORMAL:
+            break;
+        case CANCELED_AUTH_CODE_DIALOG:
+            dialogDeviceAuth->close();
+            break;
+    }
+
+    Server* server = &Server::getInstance();
+    server->clientDisconnect();
+
+    return "";
 }

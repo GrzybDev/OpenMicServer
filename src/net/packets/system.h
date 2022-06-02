@@ -21,6 +21,7 @@ private:
     QDialog* dialogDeviceAuth;
 
     QString handleHello(QJsonObject data);
+    QString handleGoodbye(QJsonObject data);
 };
 
 #endif // SYSTEM_H

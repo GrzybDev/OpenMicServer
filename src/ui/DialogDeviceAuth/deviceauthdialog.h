@@ -28,6 +28,7 @@ private:
 
 private slots:
     void onAuthCodeReceived(int authCode);
+    void onReject();
 };
 
 #endif // DEVICEAUTHDIALOG_H
