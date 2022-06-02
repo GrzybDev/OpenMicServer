@@ -16,6 +16,9 @@ public:
     QString HandleCommand(QJsonObject msg);
     static QString GetResponse(SERVER_MESSAGE type, QJsonObject data);
 
+signals:
+    void onAuthCodeReceived(int authCode);
+
 private:
     CLIENT_MESSAGE getMessageType(QString type);
 
