@@ -32,6 +32,8 @@ QVariant Settings::GetDefault(QString key)
             return 10000;
         case qConstHash(NETWORK_INTERFACE):
             return getDefaultNetworkAdapter();
+        case qConstHash(NETWORK_PING_INTERVAL):
+            return 20000;
         case qConstHash(DEVICE_ID):
             return "";
         default:
