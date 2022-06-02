@@ -5,7 +5,7 @@
 #include <QJsonObject>
 
 #include "packets/system.h"
-#include "./servermessage.h"
+#include "./message.h"
 
 class Handler : public QObject
 {
@@ -14,13 +14,13 @@ public:
     explicit Handler(QObject *parent = nullptr);
 
     QString HandleCommand(QJsonObject msg);
-    static QString GetResponse(SERVER_MESSAGE type, QJsonObject data);
+    static QString GetResponse(MESSAGE type, QJsonObject data);
 
 signals:
     void onAuthCodeReceived(int authCode);
 
 private:
-    CLIENT_MESSAGE getMessageType(QString type);
+    MESSAGE getMessageType(QString type);
 
     PacketSystem *pSystem;
 };

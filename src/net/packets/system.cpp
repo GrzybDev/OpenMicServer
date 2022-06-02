@@ -3,6 +3,7 @@
 #include <QCoreApplication>
 #include "../handler.h"
 #include <QSysInfo>
+#include "../exitcode.h"
 #include "../../ui/DialogDeviceAuth/deviceauthdialog.h"
 
 PacketSystem::PacketSystem(QObject *parent)
@@ -11,10 +12,10 @@ PacketSystem::PacketSystem(QObject *parent)
     appSettings = & Settings::getInstance();
 }
 
-QString PacketSystem::Handle(CLIENT_MESSAGE type, QJsonObject data)
+QString PacketSystem::Handle(MESSAGE type, QJsonObject data)
 {
     switch (type) {
-        case CLIENT_SYSTEM_HELLO:
+        case SYSTEM_HELLO:
             return handleHello(data);
         default:
             return "";
@@ -55,7 +56,7 @@ QString PacketSystem::handleHello(QJsonObject data)
         response["needAuth"] = needAuth;
 
         if (needAuth) {
-            DeviceAuthDialog* dialogDeviceAuth = new DeviceAuthDialog();
+            dialogDeviceAuth = new DeviceAuthDialog();
             dialogDeviceAuth->setModal(true);
             dialogDeviceAuth->show();
         }
@@ -66,5 +67,5 @@ QString PacketSystem::handleHello(QJsonObject data)
         response["message"] = tr("Version mismatch between client and server!\nIf you're using official apps, please make sure that both client and server have equal version numbers.\n\nCurrent values:\nClient version: %1\nServer version: %2").arg(clientVersion, QCoreApplication::applicationVersion());
     }
 
-    return Handler::GetResponse(SERVER_SYSTEM_HELLO, response);
+    return Handler::GetResponse(SYSTEM_HELLO, response);
 }

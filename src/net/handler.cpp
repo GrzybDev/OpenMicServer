@@ -11,32 +11,34 @@ Handler::Handler(QObject *parent)
 QString Handler::HandleCommand(QJsonObject msg)
 {
     QJsonValue jsonType = msg.value("type");
-    CLIENT_MESSAGE messageType = getMessageType(jsonType.toString());
+    MESSAGE messageType = getMessageType(jsonType.toString());
 
     switch (messageType) {
-        case CLIENT_SYSTEM_HELLO:
+        case SYSTEM_HELLO:
             return pSystem->Handle(messageType, msg);
         default:
             return "";
     }
 }
 
-CLIENT_MESSAGE Handler::getMessageType(QString type)
+MESSAGE Handler::getMessageType(QString type)
 {
     switch (qt_hash(type)) {
         case qConstHash("System_Hello"):
-            return CLIENT_SYSTEM_HELLO;
+            return SYSTEM_HELLO;
         default:
-            return CLIENT_UNKNOWN;
+            return UNKNOWN;
     }
 }
 
-QString Handler::GetResponse(SERVER_MESSAGE type, QJsonObject data)
+QString Handler::GetResponse(MESSAGE type, QJsonObject data)
 {
     switch (type) {
-        case SERVER_SYSTEM_HELLO:
+        case SYSTEM_HELLO:
             data["type"] = "System_Hello";
             break;
+        default:
+            throw std::exception("Unknown message type specified!");
     }
 
     QJsonDocument response(data);

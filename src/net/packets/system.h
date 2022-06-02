@@ -4,6 +4,7 @@
 #include <QObject>
 #include "../packet.h"
 #include "../../settings.h"
+#include <QDialog>
 
 class PacketSystem : public QObject, public Packet
 {
@@ -13,10 +14,11 @@ class PacketSystem : public QObject, public Packet
 public:
     explicit PacketSystem(QObject *parent = nullptr);
 
-    QString Handle(CLIENT_MESSAGE type, QJsonObject data);
+    QString Handle(MESSAGE type, QJsonObject data);
 
 private:
     Settings *appSettings;
+    QDialog* dialogDeviceAuth;
 
     QString handleHello(QJsonObject data);
 };
