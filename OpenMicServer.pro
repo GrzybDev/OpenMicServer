@@ -19,12 +19,12 @@ SOURCES += \
     src/ui/WindowMain/mainwindow.cpp
 
 HEADERS += \
-    src/net/clientmessage.h \
+    src/net/exitcode.h \
     src/net/handler.h \
+    src/net/message.h \
     src/net/packets/system.h \
     src/net/packet.h \
     src/net/server.h \
-    src/net/servermessage.h \
     src/openmic.h \
     src/settings.h \
     src/ui/DialogDeviceAuth/deviceauthdialog.h \
