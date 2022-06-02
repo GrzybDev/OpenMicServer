@@ -56,7 +56,8 @@ QString PacketSystem::handleHello(QJsonObject data)
 
         if (needAuth) {
             DeviceAuthDialog* dialogDeviceAuth = new DeviceAuthDialog();
-            dialogDeviceAuth->exec();
+            dialogDeviceAuth->setModal(true);
+            dialogDeviceAuth->show();
         }
     }
     else
