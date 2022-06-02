@@ -82,7 +82,18 @@ void Server::socketDisconnected()
 
     if (pClient) {
         isClientConnected = false;
+        connectedClient = nullptr;
+        pingTimer->stop();
+
         pClient->deleteLater();
+    }
+}
+
+void Server::sendMessage(QString message)
+{
+    if (isClientConnected) {
+        qDebug() << "-->" << message;
+        connectedClient->sendTextMessage(message);
     }
 }
 
