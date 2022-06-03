@@ -30,6 +30,9 @@ QString PacketSystem::handleHello(QJsonObject data)
     QString clientVersion = data.value("clientVersion").toString();
     QString clientID = data.value("clientID").toString();
 
+    Server* server = &Server::getInstance();
+    server->connectedClientID = clientID;
+
     QJsonObject response;
 
     qDebug() << "Connected client:" << clientApp << "(Version:" << clientVersion << ")";
@@ -71,8 +74,6 @@ QString PacketSystem::handleHello(QJsonObject data)
     {
         response["error"] = VERSION_MISMATCH;
         response["message"] = tr("Version mismatch between client and server!\n\nIf you're using official apps, please make sure that both client and server have equal version numbers.\n\nClient version: %1\nServer version: %2").arg(clientVersion, QCoreApplication::applicationVersion());
-
-        Server* server = &Server::getInstance();
         server->serverDisconnect(VERSION_MISMATCH, true);
     }
 
