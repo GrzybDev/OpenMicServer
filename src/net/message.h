@@ -5,7 +5,8 @@ enum MESSAGE
 {
     UNKNOWN,
     SYSTEM_HELLO,
-    SYSTEM_GOODBYE
+    SYSTEM_GOODBYE,
+    AUTH_CODE_VERIFY
 };
 
 #endif // MESSAGE_H

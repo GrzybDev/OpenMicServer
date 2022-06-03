@@ -5,6 +5,7 @@
 #include <QJsonObject>
 
 #include "packets/system.h"
+#include "packets/auth.h"
 #include "./message.h"
 
 class Handler : public QObject
@@ -23,6 +24,7 @@ private:
     MESSAGE getMessageType(QString type);
 
     PacketSystem *pSystem;
+    PacketAuth *pAuth;
 };
 
 #endif // HANDLER_H

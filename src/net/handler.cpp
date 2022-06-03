@@ -1,11 +1,13 @@
 #include "handler.h"
 #include "../utils.h"
 #include <QJsonDocument>
+#include <QMessageBox>
 
 Handler::Handler(QObject *parent)
     : QObject{parent}
 {
     pSystem = new PacketSystem(this);
+    pAuth = new PacketAuth(this);
 }
 
 QString Handler::HandleCommand(QJsonObject msg)
@@ -17,6 +19,8 @@ QString Handler::HandleCommand(QJsonObject msg)
         case SYSTEM_HELLO:
         case SYSTEM_GOODBYE:
             return pSystem->Handle(messageType, msg);
+        case AUTH_CODE_VERIFY:
+            return pAuth->Handle(messageType, msg);
         default:
             return "";
     }
@@ -29,6 +33,8 @@ MESSAGE Handler::getMessageType(QString type)
             return SYSTEM_HELLO;
         case qConstHash("System_Goodbye"):
             return SYSTEM_GOODBYE;
+        case qConstHash("Auth_CodeVerify"):
+            return AUTH_CODE_VERIFY;
         default:
             return UNKNOWN;
     }
@@ -43,8 +49,11 @@ QString Handler::GetResponse(MESSAGE type, QJsonObject data)
         case SYSTEM_GOODBYE:
             data["type"] = "System_Goodbye";
             break;
-        default:
+        case AUTH_CODE_VERIFY:
+            data["type"] = "Auth_CodeVerify";
             break;
+        default:
+            return "";
     }
 
     QJsonDocument response(data);
