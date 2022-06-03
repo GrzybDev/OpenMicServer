@@ -11,6 +11,8 @@
 #define DEVICE_ID "deviceID"
 #define PAIRED_DEVICES "devices/paired"
 
+#define PAIRED_DEVICES_SEPERATOR ";"
+
 #define PORT_MIN 1024
 #define PORT_MAX 65535
 
