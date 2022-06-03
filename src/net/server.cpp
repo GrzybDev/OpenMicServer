@@ -61,6 +61,11 @@ void Server::processCommand(QString message)
             qDebug() << "No response generated. Disconnecting...";
             pClient->close(QWebSocketProtocol::CloseCodeBadOperation, tr("Invalid text data, disconnecting..."));
         } else {
+            if (response == "DELAYED_RESPONSE") {
+                // Other module will send response
+                return;
+            }
+
             qDebug() << "-->" << response;
             pClient->sendTextMessage(response);
         }
