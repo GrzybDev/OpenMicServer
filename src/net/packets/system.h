@@ -18,6 +18,7 @@ public:
 
 private:
     Settings *appSettings;
+
     QDialog* dialogDeviceAuth;
 
     QString handleHello(QJsonObject data);

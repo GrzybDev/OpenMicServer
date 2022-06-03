@@ -47,7 +47,7 @@ QString PacketSystem::handleHello(QJsonObject data)
 
     if (clientValid) {
         QString knownIDsRaw = appSettings->Get(PAIRED_DEVICES).toString();
-        QStringList knownIDs = knownIDsRaw.split(";");
+        QStringList knownIDs = knownIDsRaw.split(PAIRED_DEVICES_SEPERATOR);
         bool needAuth = !knownIDs.contains(clientID);
 
         response["serverApp"] = QCoreApplication::applicationName();
@@ -58,15 +58,22 @@ QString PacketSystem::handleHello(QJsonObject data)
         response["needAuth"] = needAuth;
 
         if (needAuth) {
-            dialogDeviceAuth = new DeviceAuthDialog();
-            dialogDeviceAuth->setModal(true);
-            dialogDeviceAuth->show();
+            DeviceAuthDialog* dialog = &DeviceAuthDialog::getInstance();
+            dialogDeviceAuth = dialog;
+
+            dialog->generateCode();
+            dialog->setModal(true);
+            dialog->setWindowFlags(dialog->windowFlags() | Qt::WindowStaysOnTopHint);
+            dialog->show();
         }
     }
     else
     {
-        response["error"] = "ERR_VERSION_MISMATCH";
-        response["message"] = tr("Version mismatch between client and server!\nIf you're using official apps, please make sure that both client and server have equal version numbers.\n\nCurrent values:\nClient version: %1\nServer version: %2").arg(clientVersion, QCoreApplication::applicationVersion());
+        response["error"] = VERSION_MISMATCH;
+        response["message"] = tr("Version mismatch between client and server!\n\nIf you're using official apps, please make sure that both client and server have equal version numbers.\n\nClient version: %1\nServer version: %2").arg(clientVersion, QCoreApplication::applicationVersion());
+
+        Server* server = &Server::getInstance();
+        server->serverDisconnect(VERSION_MISMATCH, true);
     }
 
     return Handler::GetResponse(SYSTEM_HELLO, response);
@@ -79,10 +86,11 @@ QString PacketSystem::handleGoodbye(QJsonObject data)
 
     switch (exitCode)
     {
-        case NORMAL:
-            break;
         case CANCELED_AUTH_CODE_DIALOG:
             dialogDeviceAuth->close();
+            break;
+        default:
+            qDebug() << "Received goodbye message, no additional actions are required!";
             break;
     }
 
