@@ -34,8 +34,14 @@ public:
 
     void sendMessage(QString message);
 
-    void serverDisconnect(EXIT_CODE exitCode);
+    void serverDisconnect(EXIT_CODE exitCode, bool waitForMessageSend = false);
     void clientDisconnect();
+
+    QString connectedClientID;
+
+signals:
+    void onMessageSent();
+    void onDisconnected();
 
 public slots:
     void onNewConnection(QWebSocketServer* context, Server::CONNECTOR connector);

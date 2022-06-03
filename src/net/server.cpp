@@ -68,6 +68,8 @@ void Server::processCommand(QString message)
 
             qDebug() << "-->" << response;
             pClient->sendTextMessage(response);
+
+            emit onMessageSent();
         }
     }
 }
@@ -92,6 +94,8 @@ void Server::socketDisconnected()
 
         pClient->deleteLater();
     }
+
+    emit onDisconnected();
 }
 
 void Server::sendMessage(QString message)
@@ -111,8 +115,18 @@ void Server::ping()
     }
 }
 
-void Server::serverDisconnect(EXIT_CODE exitCode)
+void Server::serverDisconnect(EXIT_CODE exitCode, bool waitForMessageSend)
 {
+    if (waitForMessageSend) {
+        QMetaObject::Connection * const connection = new QMetaObject::Connection;
+        *connection = connect(this, &Server::onMessageSent, this, [=](){
+            serverDisconnect(exitCode);
+            delete connection;
+        });
+
+        return;
+    }
+
     if (isClientConnected) {
         QJsonObject data;
         data["exitCode"] = exitCode;
