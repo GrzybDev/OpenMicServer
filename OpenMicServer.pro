@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     src/main.cpp \
     src/net/handler.cpp \
+    src/net/packets/auth.cpp \
     src/net/packets/system.cpp \
     src/net/server.cpp \
     src/openmic.cpp \
@@ -22,6 +23,7 @@ HEADERS += \
     src/net/exitcode.h \
     src/net/handler.h \
     src/net/message.h \
+    src/net/packets/auth.h \
     src/net/packets/system.h \
     src/net/packet.h \
     src/net/server.h \
@@ -51,4 +53,4 @@ QMAKE_TARGET_COMPANY = GrzybDev
 QMAKE_TARGET_DESCRIPTION = OpenMic Server
 QMAKE_TARGET_COPYRIGHT = Marek Grzyb (@GrzybDev)
 QMAKE_TARGET_PRODUCT = OpenMic
-VERSION = 0.0.0.4
+VERSION = 0.0.1.0
