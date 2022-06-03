@@ -19,11 +19,23 @@ public:
     explicit DeviceAuthDialog(QWidget *parent = nullptr);
     ~DeviceAuthDialog();
 
+    DeviceAuthDialog(const DeviceAuthDialog&) {}
+
+    static DeviceAuthDialog & getInstance() {
+        static DeviceAuthDialog * _instance = 0;
+
+        if ( _instance == 0 )
+            _instance = new DeviceAuthDialog();
+
+        return *_instance;
+    }
+
+    void generateCode();
+
 private:
     Ui::DeviceAuthDialog *ui;
     Server* server;
 
-    void generateCode();
     int generatedCode;
 
 private slots:

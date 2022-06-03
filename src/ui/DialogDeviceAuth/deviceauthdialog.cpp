@@ -13,8 +13,7 @@ DeviceAuthDialog::DeviceAuthDialog(QWidget *parent) :
 
     connect(this, SIGNAL(rejected()), SLOT(onReject()));
     connect(server->handler, SIGNAL(onAuthCodeReceived(int)), this, SLOT(onAuthCodeReceived(int)));
-
-    generateCode();
+    connect(server, &Server::onDisconnected, this, [=](){ reject(); });
 }
 
 DeviceAuthDialog::~DeviceAuthDialog()
@@ -34,9 +33,31 @@ void DeviceAuthDialog::onAuthCodeReceived(int authCode)
 {
     qDebug() << "Received authCode:" << authCode;
 
+    QJsonObject response;
+
     if (authCode == generatedCode) {
         qDebug() << "Received authCode is correct!";
+
+        Settings* settings = &Settings::getInstance();
+
+        QString knownIDsRaw = settings->Get(PAIRED_DEVICES).toString();
+        QStringList knownIDs = knownIDsRaw.split(PAIRED_DEVICES_SEPERATOR);
+
+        knownIDs.append(server->connectedClientID);
+        knownIDsRaw = knownIDs.join(PAIRED_DEVICES_SEPERATOR);
+
+        settings->Set(PAIRED_DEVICES, knownIDsRaw);
+
+        qDebug() << "Added" << server->connectedClientID << "to known devices list!";
+        accept();
+    } else {
+        qDebug() << "Received authCode is invalid!";
+
+        response["error"] = AUTH_CODE_INVALID;
+        response["message"] = tr("Code you provided is invalid for this server.");
     }
+
+    server->sendMessage(Handler::GetResponse(AUTH_CODE_VERIFY, response));
 }
 
 void DeviceAuthDialog::onReject()
