@@ -9,7 +9,7 @@
 #define NETWORK_PORT "network/port"
 #define NETWORK_PING_INTERVAL "network/pingInterval"
 #define DEVICE_ID "deviceID"
-#define PAIRED_DEVICES "devices/paired"
+#define PAIRED_DEVICES "pairedDevices"
 
 #define PAIRED_DEVICES_SEPERATOR ";"
 
