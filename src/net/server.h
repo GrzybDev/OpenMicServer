@@ -6,6 +6,7 @@
 #include <QTimer>
 #include "handler.h"
 #include "exitcode.h"
+#include "../audio.h"
 
 class Server : public QObject
 {
@@ -50,6 +51,7 @@ public slots:
 private:
     QWebSocket* connectedClient = nullptr;
     QTimer* pingTimer;
+    Audio* audioHandler;
 
     bool isClientConnected = false;
 

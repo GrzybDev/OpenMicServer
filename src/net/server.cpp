@@ -8,6 +8,7 @@ Server::Server(QObject *parent)
     : QObject{parent}
 {
     handler = new Handler(this);
+    audioHandler = &Audio::getInstance();
 
     pingTimer = new QTimer(this);
     connect(pingTimer, &QTimer::timeout, this, &Server::ping);
@@ -76,9 +77,8 @@ void Server::processCommand(QString message)
 
 void Server::processAudioData(QByteArray message)
 {
-    // QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
-
-    qDebug() << "Received audio data:" <<  message;
+    // TODO: Allow this only after auth
+    audioHandler->play(message);
 }
 
 void Server::socketDisconnected()
