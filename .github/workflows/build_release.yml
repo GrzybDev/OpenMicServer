@@ -16,7 +16,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
-        modules: 'qtwebsockets'
+        modules: 'qtwebsockets qtmultimedia'
         version: 6.2.4
 
     - name: Install CQTDeployer
@@ -70,7 +70,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
-        modules: 'qtwebsockets'
+        modules: 'qtwebsockets qtmultimedia'
         tools: 'tools_ifw'
         version: 6.2.4
 
