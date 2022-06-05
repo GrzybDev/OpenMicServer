@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    src/audio.cpp \
     src/main.cpp \
     src/net/handler.cpp \
     src/net/packets/auth.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
     src/ui/WindowMain/mainwindow.cpp
 
 HEADERS += \
+    src/audio.h \
     src/net/exitcode.h \
     src/net/handler.h \
     src/net/message.h \
