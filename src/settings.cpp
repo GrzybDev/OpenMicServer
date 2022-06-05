@@ -5,6 +5,7 @@
 #include "utils.h"
 #include <QUuid>
 #include <QCoreApplication>
+#include <QMediaDevices>
 
 Settings::Settings(QObject *parent)
     : QObject{parent}
@@ -28,6 +29,8 @@ QVariant Settings::GetDefault(QString key)
 {
     switch (qt_hash(key))
     {
+        case qConstHash(AUDIO_DEVICE):
+            return mDevices->defaultAudioOutput().description();
         case qConstHash(NETWORK_PORT):
             return 10000;
         case qConstHash(NETWORK_INTERFACE):
@@ -45,6 +48,23 @@ QNetworkInterface Settings::GetNetworkInterface()
 {
     QString ifaceName = Get(NETWORK_INTERFACE).toString();
     return QNetworkInterface::interfaceFromName(ifaceName);
+}
+
+QAudioDevice Settings::GetAudioDevice()
+{
+    QString audioDevName = Get(AUDIO_DEVICE).toString();
+
+    auto deviceList = mDevices->audioOutputs();
+
+    foreach(auto device, deviceList)
+    {
+        if (device.description() == audioDevName)
+            return device;
+    }
+
+    // Required device not found, reset audio device
+    Reset(AUDIO_DEVICE);
+    return GetAudioDevice(); // Infinite recursion possible here, should we handle it somehow?
 }
 
 void Settings::Set(QString key, QVariant value)

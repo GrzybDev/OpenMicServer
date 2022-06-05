@@ -4,7 +4,10 @@
 #include <QObject>
 #include <QSettings>
 #include <QNetworkInterface>
+#include <QAudioDevice>
+#include <QMediaDevices>
 
+#define AUDIO_DEVICE "audio/device"
 #define NETWORK_INTERFACE "network/interface"
 #define NETWORK_PORT "network/port"
 #define NETWORK_PING_INTERVAL "network/pingInterval"
@@ -34,13 +37,16 @@ public:
 
     QVariant Get(QString key);
     QVariant GetDefault(QString key);
+
     QNetworkInterface GetNetworkInterface();
+    QAudioDevice GetAudioDevice();
 
     void Set(QString key, QVariant value);
     void Reset(QString key);
 
 private:
     QSettings ctx;
+    QMediaDevices* mDevices = new QMediaDevices(this);
 
     void validateCommunicationPort();
     QString getDefaultNetworkAdapter();
