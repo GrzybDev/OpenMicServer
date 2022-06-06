@@ -19,5 +19,7 @@ public:
 private:
     Ui::MainWindow *ui;
     OpenMic* openmic;
+
+    void initStatus();
 };
 #endif // MAINWINDOW_H
