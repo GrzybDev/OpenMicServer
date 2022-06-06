@@ -42,6 +42,9 @@ FORMS += \
 TRANSLATIONS += \
     src/lang/OpenMicServer_pl_PL.ts
 
+RESOURCES += \
+    src/res/resources.qrc
+
 CONFIG += lrelease
 CONFIG += embed_translations
 

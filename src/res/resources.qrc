@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/">
+        <file>appIcon.ico</file>
+        <file>icons/usb_FILL0_wght400_GRAD0_opsz48.svg</file>
+        <file>icons/check_FILL0_wght400_GRAD0_opsz48.svg</file>
+        <file>icons/block_FILL0_wght400_GRAD0_opsz48.svg</file>
+        <file>icons/bluetooth_FILL0_wght400_GRAD0_opsz48.svg</file>
+        <file>icons/wifi_FILL0_wght400_GRAD0_opsz48.svg</file>
+        <file>icons/signal_disconnected_FILL0_wght400_GRAD0_opsz48.svg</file>
+        <file>icons/close_FILL0_wght400_GRAD0_opsz48.svg</file>
+        <file>icons/equalizer_FILL0_wght400_GRAD0_opsz48.svg</file>
+        <file>icons/devices_FILL0_wght400_GRAD0_opsz48.svg</file>
+        <file>icons/public_FILL0_wght400_GRAD0_opsz48.svg</file>
+        <file>icons/settings_suggest_FILL0_wght400_GRAD0_opsz48.svg</file>
+        <file>icons/face_FILL0_wght400_GRAD0_opsz48.svg</file>
+        <file>icons/help_FILL0_wght400_GRAD0_opsz48.svg</file>
+        <file>icons/quiz_FILL0_wght400_GRAD0_opsz48.svg</file>
+        <file>Spinner-1s-48px.gif</file>
+    </qresource>
+</RCC>
