@@ -65,14 +65,23 @@ void OpenMic::StartServer(bool isPublic)
 
         connect(webSocket, &QWebSocketServer::newConnection, server, [=]() { server->onNewConnection(webSocket, connector); });
         connect(webSocket, &QWebSocketServer::closed, server, &Server::onClosed);
+
+        if (!isPublic) {
+            QFuture<void> usbFuture = QtConcurrent::run([=](){ this->initUSB(); });
+        } else {
+            emit changeConnectionStatus(connector, true, tr("Currently listening on %1:%2").arg(addr.toString()).arg(port));
+        }
+
+        webSockets[connector] = webSocket;
     }
     else
     {
-        qDebug() << "Failed to start server on" << addr << ":" << port << "(" << webSocket->errorString() << ")";
-        // TODO: Handle failure
-    }
+        QString errorString = webSocket->errorString();
+        qDebug() << "Failed to start server on" << addr << ":" << port << "(" << errorString << ")";
 
-    webSockets.append(webSocket);
+        emit changeConnectionStatus(connector, false, errorString);
+        emit initError(tr("Failed to start %1 listener!\nPlease check if no other program is currently listening on your current communication port!\n\nSystem returned this error: %2").arg(srvName, errorString));
+    }
 }
 
 void OpenMic::StopServers()
@@ -84,4 +93,36 @@ void OpenMic::StopServers()
     }
 
     webSockets.clear();
+}
+
+void OpenMic::initUSB()
+{
+    QProcess* adb = new QProcess(this);
+
+    QString program = "adb";
+    QStringList arguments;
+    arguments << "start-server";
+
+    adb->start(program, arguments);
+
+    if (!adb->waitForStarted())
+    {
+        QString errorStr = tr("Failed to start ADB!\nEither adb binary is missing, or you may have insufficient permissions to invoke the program.");
+        emit changeConnectionStatus(Server::USB, false, errorStr);
+        emit initError(errorStr + tr("\n\nYou won't be able to connect via USB! (If you don't intend to use USB, you can disable it in Settings -> Device)"));
+
+        return;
+    }
+
+    if (!adb->waitForFinished())
+    {
+        QString errorStr = tr("ADB took too long to execute, cannot continue USB initialization.");
+
+        emit changeConnectionStatus(Server::USB, false, errorStr);
+        emit initError(errorStr + tr("\n\nYou won't be able to connect via USB! (If you don't intend to use USB, you can disable it in Settings -> Device)"));
+
+        return;
+    }
+
+    emit changeConnectionStatus(Server::USB, true, tr("Waiting for your mobile device"));
 }

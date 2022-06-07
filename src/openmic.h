@@ -25,14 +25,21 @@ public:
     void RestartServer();
 
 signals:
+    void changeConnectionStatus(Server::CONNECTOR connector, bool isEnabled, QString statusText);
+    void initError(QString errorText);
+
 private:
     Settings* appSettings;
     Server* server;
 
-    QList<QWebSocketServer*> webSockets;
+    QTimer* btTimer;
+
+    QMap<Server::CONNECTOR, QWebSocketServer*> webSockets;
 
     void StartServer(bool isPublic);
     void StopServers();
+
+    void initUSB();
 };
 
 #endif // OPENMIC_H
