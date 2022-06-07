@@ -45,7 +45,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
-        modules: 'qtwebsockets qtmultimedia'
+        modules: 'qtwebsockets qtmultimedia qtconnectivity'
         version: 6.2.4
 
     - name: Install GStreamer
@@ -100,7 +100,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
-        modules: 'qtwebsockets qtmultimedia'
+        modules: 'qtwebsockets qtmultimedia qtconnectivity'
         version: 6.2.4
 
     - name: Set up Visual Studio shell
