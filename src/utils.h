@@ -1,6 +1,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <QObject>
+
 unsigned int constexpr qConstHash(const char *string)
 {
     unsigned int h = 0;
@@ -15,5 +17,11 @@ unsigned int constexpr qConstHash(const char *string)
     return h;
 }
 
+class Utils : public QObject
+{
+    Q_OBJECT
+public:
+    static bool isBluetoothSupported();
+};
 
 #endif // UTILS_H

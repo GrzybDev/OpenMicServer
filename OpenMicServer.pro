@@ -1,4 +1,4 @@
-QT       += core gui websockets multimedia
+QT       += core gui websockets multimedia bluetooth
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -18,7 +18,8 @@ SOURCES += \
     src/openmic.cpp \
     src/settings.cpp \
     src/ui/DialogDeviceAuth/deviceauthdialog.cpp \
-    src/ui/WindowMain/mainwindow.cpp
+    src/ui/WindowMain/mainwindow.cpp \
+    src/utils.cpp
 
 HEADERS += \
     src/audio.h \
@@ -59,3 +60,5 @@ QMAKE_TARGET_DESCRIPTION = OpenMic Server
 QMAKE_TARGET_COPYRIGHT = Marek Grzyb (@GrzybDev)
 QMAKE_TARGET_PRODUCT = OpenMic
 VERSION = 0.0.2.0
+
+win32:LIBS += -lBthprops
