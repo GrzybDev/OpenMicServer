@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<Package>
+    <DisplayName>Android Debug Bridge (Required for USB functionality)</DisplayName>
+    <DisplayName xml:lang="pl_PL">Android Debug Bridge (Wymagane do połączenia po USB)</DisplayName>
+    <Description>Android Debug Bridge is small application which have various USB related tools that OpenMic requires if you want to connect your phone to OpenMic over USB.</Description>
+    <Description xml:lang="pl">Android Debug Bridge to mała aplikacja która ma różne narzędzia do obsługi twojego telefonu przez USB. Jest to wymagane jeżeli chcesz połączyć telefon z OpenMic przez USB.</Description>
+    <Version>0</Version>
+    <ReleaseDate></ReleaseDate>
+</Package>
