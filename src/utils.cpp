@@ -1,10 +1,11 @@
 #include "utils.h"
 
-#include <Windows.h>
-#include <BluetoothAPIs.h>
 #include <QBluetoothHostInfo>
 
-#ifndef Q_OS_WIN
+#ifdef Q_OS_WIN
+#include <Windows.h>
+#include <BluetoothAPIs.h>
+#else
 #include <QBluetoothLocalDevice>
 #endif
 
