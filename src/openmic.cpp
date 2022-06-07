@@ -1,12 +1,14 @@
 #include "openmic.h"
 
+#include <QtConcurrent/QtConcurrent>
+#include <QBluetoothLocalDevice>
+#include "utils.h"
+
 OpenMic::OpenMic(QObject *parent)
     : QObject{parent}
 {
     appSettings = & Settings::getInstance();
     server = & Server::getInstance();
-
-    RestartServer();
 }
 
 void OpenMic::RestartServer()
@@ -15,6 +17,8 @@ void OpenMic::RestartServer()
 
     StartServer(false);
     StartServer(true);
+
+    initBluetooth();
 }
 
 void OpenMic::StartServer(bool isPublic)
@@ -125,4 +129,24 @@ void OpenMic::initUSB()
     }
 
     emit changeConnectionStatus(Server::USB, true, tr("Waiting for your mobile device"));
+}
+
+void OpenMic::initBluetooth()
+{
+    btTimer = new QTimer(this);
+    connect(btTimer, &QTimer::timeout, this, &OpenMic::checkBluetoothSupport);
+    btTimer->start(BT_CHECK_INTERVAL);
+}
+
+void OpenMic::checkBluetoothSupport()
+{
+    bool isSupported = Utils::isBluetoothSupported();
+    QString status;
+
+    if (isSupported)
+        status = tr("Waiting for Bluetooth connection from your phone!");
+    else
+        status = tr("Bluetooth is either disabled or not available on your device!");
+
+    emit changeConnectionStatus(Server::BLUETOOTH, isSupported, status);
 }

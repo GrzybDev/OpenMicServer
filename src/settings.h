@@ -19,6 +19,8 @@
 #define PORT_MIN 1024
 #define PORT_MAX 65535
 
+#define BT_CHECK_INTERVAL 1000
+
 class Settings : public QObject
 {
     Q_OBJECT

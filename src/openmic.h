@@ -40,6 +40,10 @@ private:
     void StopServers();
 
     void initUSB();
+    void initBluetooth();
+
+private slots:
+    void checkBluetoothSupport();
 };
 
 #endif // OPENMIC_H
