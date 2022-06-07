@@ -16,9 +16,13 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+public slots:
+    void changeStatus(Server::CONNECTOR connector, bool isEnabled, QString statusText);
+    void showWarning(QString warningTitle, QString warningText);
+
 private:
     Ui::MainWindow *ui;
-    OpenMic* openmic;
+    OpenMic* openmic = &OpenMic::getInstance();
 
     void initStatus();
 };

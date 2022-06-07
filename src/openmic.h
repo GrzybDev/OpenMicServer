@@ -11,6 +11,16 @@ class OpenMic : public QObject
     Q_OBJECT
 public:
     explicit OpenMic(QObject *parent = nullptr);
+    OpenMic(const OpenMic&) {}
+
+    static OpenMic & getInstance() {
+        static OpenMic * _instance = nullptr;
+
+        if (_instance == nullptr)
+            _instance = new OpenMic();
+
+        return *_instance;
+    }
 
     void RestartServer();
 
