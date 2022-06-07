@@ -271,6 +271,9 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionDisconnect">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../res/resources.qrc">
      <normaloff>:/icons/signal_disconnected_FILL0_wght400_GRAD0_opsz48.svg</normaloff>:/icons/signal_disconnected_FILL0_wght400_GRAD0_opsz48.svg</iconset>
