@@ -138,6 +138,7 @@ jobs:
       with:
         patterns: |
           -debug/*
+          -ui_*
         input: sarif-results/cpp.sarif
         output: sarif-results/cpp.sarif
 
