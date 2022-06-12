@@ -118,11 +118,7 @@ void Server::ping()
 void Server::serverDisconnect(EXIT_CODE exitCode, bool waitForMessageSend)
 {
     if (waitForMessageSend) {
-        QMetaObject::Connection * const connection = new QMetaObject::Connection;
-        *connection = connect(this, &Server::onMessageSent, this, [=](){
-            serverDisconnect(exitCode);
-            delete connection;
-        });
+        connect(this, &Server::onMessageSent, this, [=](){ serverDisconnect(exitCode); });
 
         return;
     }

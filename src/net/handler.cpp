@@ -20,6 +20,7 @@ QString Handler::HandleCommand(QJsonObject msg)
         case SYSTEM_GOODBYE:
             return pSystem->Handle(messageType, msg);
         case AUTH_CODE_VERIFY:
+        case AUTH_CLIENT_SIDE:
             return pAuth->Handle(messageType, msg);
         default:
             return "";
@@ -35,6 +36,8 @@ MESSAGE Handler::getMessageType(QString type)
             return SYSTEM_GOODBYE;
         case qConstHash("Auth_CodeVerify"):
             return AUTH_CODE_VERIFY;
+        case qConstHash("Auth_ClientSide"):
+            return AUTH_CLIENT_SIDE;
         default:
             return UNKNOWN;
     }

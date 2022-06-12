@@ -10,8 +10,19 @@ class PacketAuth : public QObject, public Packet
     Q_INTERFACES(Packet)
 public:
     explicit PacketAuth(QObject *parent = nullptr);
+    PacketAuth(const PacketAuth&) {}
+
+    static PacketAuth & getInstance() {
+        static PacketAuth * _instance = 0;
+
+        if ( _instance == 0 )
+            _instance = new PacketAuth();
+
+        return *_instance;
+    }
 
     QString Handle(MESSAGE type, QJsonObject data);
+    QString handleClientSide(QJsonObject data);
 
 private:
     QString handleCodeVerify(QJsonObject data);

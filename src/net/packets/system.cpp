@@ -61,13 +61,8 @@ QString PacketSystem::handleHello(QJsonObject data)
         response["needAuth"] = needAuth;
 
         if (needAuth) {
-            DeviceAuthDialog* dialog = &DeviceAuthDialog::getInstance();
-            dialogDeviceAuth = dialog;
-
-            dialog->generateCode();
-            dialog->setModal(true);
-            dialog->setWindowFlags(dialog->windowFlags() | Qt::WindowStaysOnTopHint);
-            dialog->show();
+            PacketAuth* auth = &PacketAuth::getInstance();
+            auth->handleClientSide(QJsonObject());
         }
     }
     else
