@@ -18,6 +18,7 @@ void OpenMic::RestartServer()
     StartServer(false);
     StartServer(true);
 
+    initWiFi();
     initBluetooth();
 }
 
@@ -30,7 +31,6 @@ void OpenMic::StartServer(bool isPublic)
     if (isPublic)
     {
         srvName = "OpenMic Server (Wi-Fi)";
-        connector = Server::WIFI;
 
         QNetworkInterface iface = appSettings->GetNetworkInterface();
         QList<QNetworkAddressEntry> addrEntries = iface.addressEntries();
@@ -54,6 +54,7 @@ void OpenMic::StartServer(bool isPublic)
         }
 
         addr = ifaceAddresses.first();
+        connector = Server::WIFI;
     } else {
         srvName = "OpenMic Server (USB)";
         addr = QHostAddress::LocalHost;
@@ -97,6 +98,9 @@ void OpenMic::StopServers()
     }
 
     webSockets.clear();
+
+    wifiTimer->stop();
+    btTimer->stop();
 }
 
 void OpenMic::initUSB()
@@ -131,6 +135,42 @@ void OpenMic::initUSB()
     emit changeConnectionStatus(Server::USB, true, tr("Waiting for your mobile device"));
 }
 
+void OpenMic::initWiFi()
+{
+    wifiTimer = new QTimer(this);
+
+    QNetworkInterface iface = appSettings->GetNetworkInterface();
+    QList<QNetworkAddressEntry> addrEntries = iface.addressEntries();
+    QNetworkAddressEntry addrEntry;
+
+    for (int i = 0; i < addrEntries.count(); i++)
+    {
+        QNetworkAddressEntry addressEntry = addrEntries.at(i);
+        QHostAddress address = addressEntry.ip();
+
+        if (!address.isNull() && address.isGlobal()) {
+            addrEntry = addressEntry;
+            break;
+        }
+    }
+
+    QStringList broadcastDataList;
+    broadcastDataList.append(QCoreApplication::applicationName());
+    broadcastDataList.append(QCoreApplication::applicationVersion());
+    broadcastDataList.append(QSysInfo::kernelType());
+    broadcastDataList.append(QSysInfo::machineHostName());
+    broadcastDataList.append(appSettings->Get(DEVICE_ID).toString());
+
+    QString broadcastDataStr = broadcastDataList.join(BROADCAST_DATA_SEPERATOR);
+
+    QHostAddress broadcastAddr = addrEntry.broadcast();
+    QByteArray broadcastData = broadcastDataStr.toUtf8().toBase64();
+    ushort broadcastPort = appSettings->Get(NETWORK_PORT).toUInt();
+
+    connect(wifiTimer, &QTimer::timeout, this, [=](){ sendBroadcast(broadcastData, broadcastAddr, broadcastPort); });
+    wifiTimer->start(WIFI_BROADCAST_INTERVAL);
+}
+
 void OpenMic::initBluetooth()
 {
     btTimer = new QTimer(this);
@@ -149,4 +189,9 @@ void OpenMic::checkBluetoothSupport()
         status = tr("Bluetooth is either disabled or not available on your device!");
 
     emit changeConnectionStatus(Server::BLUETOOTH, isSupported, status);
+}
+
+void OpenMic::sendBroadcast(QByteArray broadcastData, QHostAddress broadcastAddr, ushort broadcastPort)
+{
+    broadcastSocket->writeDatagram(broadcastData, broadcastAddr, broadcastPort);
 }

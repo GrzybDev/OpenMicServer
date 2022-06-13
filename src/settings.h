@@ -15,10 +15,12 @@
 #define PAIRED_DEVICES "pairedDevices"
 
 #define PAIRED_DEVICES_SEPERATOR ";"
+#define BROADCAST_DATA_SEPERATOR ";"
 
 #define PORT_MIN 1024
 #define PORT_MAX 65535
 
+#define WIFI_BROADCAST_INTERVAL 1000
 #define BT_CHECK_INTERVAL 1000
 
 class Settings : public QObject
