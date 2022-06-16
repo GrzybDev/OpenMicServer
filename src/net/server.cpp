@@ -128,7 +128,7 @@ void Server::serverDisconnect(EXIT_CODE exitCode, bool waitForMessageSend)
         data["exitCode"] = exitCode;
 
         QString packet = Handler::GetResponse(SYSTEM_GOODBYE, data);
-        connectedClient->sendTextMessage(packet);
+        sendMessage(packet);
 
         clientDisconnect();
     }
