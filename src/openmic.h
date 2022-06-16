@@ -6,6 +6,7 @@
 #include "settings.h"
 #include "net/server.h"
 #include <QUdpSocket>
+#include <QBluetoothServer>
 
 class OpenMic : public QObject
 {
@@ -39,6 +40,11 @@ private:
     QMap<Server::CONNECTOR, QWebSocketServer*> webSockets;
     QUdpSocket *broadcastSocket = new QUdpSocket(this);
 
+    QBluetoothServer* rfcommServer = nullptr;
+    QBluetoothServiceInfo serviceInfo;
+    QList<QBluetoothSocket *> clientSockets;
+    QMap<QBluetoothSocket *, QString> clientNames;
+
     void StartServer(bool isPublic);
     void StopServers();
 
@@ -49,6 +55,10 @@ private:
 private slots:
     void checkBluetoothSupport();
     void sendBroadcast(QByteArray broadcastData, QHostAddress broadcastAddr, ushort broadcastPort);
+
+    void btClientConnected();
+    void btClientDisconnected();
+    void btReadSocket();
 };
 
 #endif // OPENMIC_H

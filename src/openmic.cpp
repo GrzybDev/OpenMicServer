@@ -176,6 +176,43 @@ void OpenMic::initBluetooth()
     btTimer = new QTimer(this);
     connect(btTimer, &QTimer::timeout, this, &OpenMic::checkBluetoothSupport);
     btTimer->start(BT_CHECK_INTERVAL);
+
+    rfcommServer = new QBluetoothServer(QBluetoothServiceInfo::RfcommProtocol, this);
+    connect(rfcommServer, &QBluetoothServer::newConnection, this, &OpenMic::btClientConnected);
+
+    QBluetoothAddress localAdapter = QBluetoothAddress();
+    bool result = rfcommServer->listen(localAdapter);
+
+    if (!result) {
+        qWarning() << "Cannot bind OpenMic Server (Bluetooth) to" << localAdapter.toString();
+    } else {
+        qDebug() << "Successful launch of OpenMic Server (Bluetooth)";
+    }
+
+    serviceInfo.setAttribute(QBluetoothServiceInfo::ServiceName, "pl.grzybdev.openmic.server");
+    serviceInfo.setAttribute(QBluetoothServiceInfo::ServiceDescription, QCoreApplication::applicationName());
+    serviceInfo.setAttribute(QBluetoothServiceInfo::ServiceProvider, QCoreApplication::organizationName());
+
+    static const QLatin1String serviceUuid("6b310fa0-ab0a-4008-8b6a-89b41cb1ccad");
+    serviceInfo.setServiceUuid(QBluetoothUuid(serviceUuid));
+
+    QBluetoothServiceInfo::Sequence publicBrowse;
+    publicBrowse << QVariant::fromValue(QBluetoothUuid(QBluetoothUuid::ServiceClassUuid::PublicBrowseGroup));
+    serviceInfo.setAttribute(QBluetoothServiceInfo::BrowseGroupList,
+                             publicBrowse);
+
+    QBluetoothServiceInfo::Sequence protocolDescriptorList;
+    QBluetoothServiceInfo::Sequence protocol;
+    protocol << QVariant::fromValue(QBluetoothUuid(QBluetoothUuid::ProtocolUuid::L2cap));
+    protocolDescriptorList.append(QVariant::fromValue(protocol));
+    protocol.clear();
+    protocol << QVariant::fromValue(QBluetoothUuid(QBluetoothUuid::ProtocolUuid::Rfcomm))
+             << QVariant::fromValue(quint8(rfcommServer->serverPort()));
+    protocolDescriptorList.append(QVariant::fromValue(protocol));
+    serviceInfo.setAttribute(QBluetoothServiceInfo::ProtocolDescriptorList,
+                             protocolDescriptorList);
+
+    serviceInfo.registerService(localAdapter);
 }
 
 void OpenMic::checkBluetoothSupport()
@@ -189,6 +226,50 @@ void OpenMic::checkBluetoothSupport()
         status = tr("Bluetooth is either disabled or not available on your device!");
 
     emit changeConnectionStatus(Server::BLUETOOTH, isSupported, status);
+}
+
+void OpenMic::btClientConnected()
+{
+    QBluetoothSocket *socket = rfcommServer->nextPendingConnection();
+
+    if (!socket)
+        return;
+
+    connect(socket, &QBluetoothSocket::readyRead, this, &OpenMic::btReadSocket);
+    connect(socket, &QBluetoothSocket::disconnected, this, QOverload<>::of(&OpenMic::btClientDisconnected));
+
+    clientSockets.append(socket);
+    clientNames[socket] = socket->peerName();
+
+    qDebug() << "Bluetooth client connected:" << socket->peerName();
+}
+
+void OpenMic::btReadSocket()
+{
+    QBluetoothSocket *socket = qobject_cast<QBluetoothSocket *>(sender());
+
+    if (!socket)
+        return;
+
+    while (socket->canReadLine()) {
+        QByteArray line = socket->readLine().trimmed();
+        qDebug() << "Received message from: " << clientNames[socket] << ", message:" << QString::fromUtf8(line.constData(), line.length());
+    }
+}
+
+void OpenMic::btClientDisconnected()
+{
+    QBluetoothSocket *socket = qobject_cast<QBluetoothSocket *>(sender());
+
+    if (!socket)
+        return;
+
+    qDebug() << "Client disconnected:" << clientNames[socket];
+
+    clientSockets.removeOne(socket);
+    clientNames.remove(socket);
+
+    socket->deleteLater();
 }
 
 void OpenMic::sendBroadcast(QByteArray broadcastData, QHostAddress broadcastAddr, ushort broadcastPort)
