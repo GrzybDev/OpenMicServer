@@ -23,6 +23,9 @@
 #define WIFI_BROADCAST_INTERVAL 1000
 #define BT_CHECK_INTERVAL 1000
 
+#define SERVER_ID "pl.grzybdev.openmic.server"
+#define SERVER_GUID "1bc0f9db-4faf-421d-8b21-455c03d890e1"
+
 class Settings : public QObject
 {
     Q_OBJECT
