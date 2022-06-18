@@ -26,6 +26,9 @@ public:
 
     void RestartServer();
 
+    QMap<Server::CONNECTOR, QWebSocketServer*> webSockets;
+    QBluetoothServer* rfcommServer = nullptr;
+
 signals:
     void changeConnectionStatus(Server::CONNECTOR connector, bool isEnabled, QString statusText);
     void initError(QString errorText);
@@ -37,15 +40,14 @@ private:
     QTimer* wifiTimer = new QTimer(this);
     QTimer* btTimer = new QTimer(this);
 
-    QMap<Server::CONNECTOR, QWebSocketServer*> webSockets;
     QUdpSocket *broadcastSocket = new QUdpSocket(this);
 
-    QBluetoothServer* rfcommServer = nullptr;
     QBluetoothServiceInfo serviceInfo;
     QList<QBluetoothSocket *> clientSockets;
     QMap<QBluetoothSocket *, QString> clientNames;
+    bool bluetoothInitialized = false;
 
-    void StartServer(bool isPublic);
+    bool StartWebSocketServer(QHostAddress hostAddress, Server::CONNECTOR connector);
     void StopServers();
 
     void initUSB();
@@ -55,10 +57,6 @@ private:
 private slots:
     void checkBluetoothSupport();
     void sendBroadcast(QByteArray broadcastData, QHostAddress broadcastAddr, ushort broadcastPort);
-
-    void btClientConnected();
-    void btClientDisconnected();
-    void btReadSocket();
 };
 
 #endif // OPENMIC_H

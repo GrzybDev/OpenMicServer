@@ -1,7 +1,6 @@
 #include "openmic.h"
 
 #include <QtConcurrent/QtConcurrent>
-#include <QBluetoothLocalDevice>
 #include "utils.h"
 
 OpenMic::OpenMic(QObject *parent)
@@ -15,78 +14,39 @@ void OpenMic::RestartServer()
 {
     StopServers();
 
-    StartServer(false);
-    StartServer(true);
-
+    initUSB();
     initWiFi();
     initBluetooth();
 }
 
-void OpenMic::StartServer(bool isPublic)
+bool OpenMic::StartWebSocketServer(QHostAddress hostAddress, Server::CONNECTOR connector)
 {
-    QString srvName;
-    QHostAddress addr;
-    Server::CONNECTOR connector;
-
-    if (isPublic)
-    {
-        srvName = "OpenMic Server (Wi-Fi)";
-
-        QNetworkInterface iface = appSettings->GetNetworkInterface();
-        QList<QNetworkAddressEntry> addrEntries = iface.addressEntries();
-        QList<QHostAddress> ifaceAddresses;
-
-        foreach (QNetworkAddressEntry addressEntry, addrEntries)
-        {
-            QHostAddress address = addressEntry.ip();
-
-            if (!address.isNull() && address.isGlobal()) {
-                ifaceAddresses.append(address);
-            }
-        }
-
-        if (ifaceAddresses.empty())
-        {
-            qDebug() << iface.humanReadableName() << "doesn't have any valid IP addressess! Cannot continue.";
-
-            // TODO: Show error message here
-            return;
-        }
-
-        addr = ifaceAddresses.first();
-        connector = Server::WIFI;
-    } else {
-        srvName = "OpenMic Server (USB)";
-        addr = QHostAddress::LocalHost;
-        connector = Server::USB;
-    }
-
-    QWebSocketServer* webSocket = new QWebSocketServer(srvName, QWebSocketServer::NonSecureMode, this);
+    QWebSocketServer* webSocket = new QWebSocketServer(SERVER_ID, QWebSocketServer::NonSecureMode, this);
     quint16 port = appSettings->Get(NETWORK_PORT).toUInt();
 
-    if (webSocket->listen(addr, port))
-    {
-        qDebug() << "Server is now listening on" << addr << ":" << port;
+    bool listening = webSocket->listen(hostAddress, port);
 
-        connect(webSocket, &QWebSocketServer::newConnection, server, [=]() { server->onNewConnection(webSocket, connector); });
+    if (listening)
+    {
+        qDebug() << "Server is now listening on" << hostAddress << ":" << port;
+
+        connect(webSocket, &QWebSocketServer::newConnection, server, [=]() { server->onNewConnection(connector); });
         connect(webSocket, &QWebSocketServer::closed, server, &Server::onClosed);
 
-        if (!isPublic) {
-            QFuture<void> usbFuture = QtConcurrent::run([=](){ this->initUSB(); });
-        } else {
-            emit changeConnectionStatus(connector, true, tr("Currently listening on %1:%2").arg(addr.toString()).arg(port));
-        }
-
         webSockets[connector] = webSocket;
+
+        emit changeConnectionStatus(connector, true, tr("Waiting for your mobile device at %1:%2").arg(hostAddress.toString()).arg(port));
     }
     else
     {
         QString errorString = webSocket->errorString();
-        qDebug() << "Failed to start server on" << addr << ":" << port << "(" << errorString << ")";
+        qDebug() << "Failed to start server on" << hostAddress << ":" << port << "(" << errorString << ")";
 
         emit changeConnectionStatus(connector, false, errorString);
-        emit initError(tr("Failed to start %1 listener!\nPlease check if no other program is currently listening on your current communication port!\n\nSystem returned this error: %2").arg(srvName, errorString));
+        emit initError(tr("Failed to start listener (ID: %1)!\nPlease check if no other program is currently listening on your current communication port!\n\nSystem returned this error: %2").arg(QString::number(connector), errorString));
     }
+
+    return listening;
 }
 
 void OpenMic::StopServers()
@@ -95,6 +55,10 @@ void OpenMic::StopServers()
     {
         if (webSocket->isListening())
             webSocket->close();
+    }
+
+    if (rfcommServer) {
+        rfcommServer->close();
     }
 
     webSockets.clear();
@@ -132,7 +96,7 @@ void OpenMic::initUSB()
         return;
     }
 
-    emit changeConnectionStatus(Server::USB, true, tr("Waiting for your mobile device"));
+    StartWebSocketServer(QHostAddress::LocalHost, Server::USB);
 }
 
 void OpenMic::initWiFi()
@@ -140,35 +104,46 @@ void OpenMic::initWiFi()
     wifiTimer = new QTimer(this);
 
     QNetworkInterface iface = appSettings->GetNetworkInterface();
+    QList<QHostAddress> ifaceAddresses;
     QList<QNetworkAddressEntry> addrEntries = iface.addressEntries();
-    QNetworkAddressEntry addrEntry;
+    QNetworkAddressEntry addrEntry = addrEntries.first();
 
-    for (int i = 0; i < addrEntries.count(); i++)
+    foreach (QNetworkAddressEntry addressEntry, addrEntries)
     {
-        QNetworkAddressEntry addressEntry = addrEntries.at(i);
         QHostAddress address = addressEntry.ip();
 
         if (!address.isNull() && address.isGlobal()) {
+            ifaceAddresses.append(address);
             addrEntry = addressEntry;
             break;
         }
     }
 
-    QStringList broadcastDataList;
-    broadcastDataList.append(QCoreApplication::applicationName());
-    broadcastDataList.append(QCoreApplication::applicationVersion());
-    broadcastDataList.append(QSysInfo::kernelType());
-    broadcastDataList.append(QSysInfo::machineHostName());
-    broadcastDataList.append(appSettings->Get(DEVICE_ID).toString());
+    if (ifaceAddresses.empty())
+    {
+        qDebug() << iface.humanReadableName() << "doesn't have any valid IP addressess! Cannot continue.";
 
-    QString broadcastDataStr = broadcastDataList.join(BROADCAST_DATA_SEPERATOR);
+        // TODO: Show error message here
+        return;
+    }
 
-    QHostAddress broadcastAddr = addrEntry.broadcast();
-    QByteArray broadcastData = broadcastDataStr.toUtf8().toBase64();
-    ushort broadcastPort = appSettings->Get(NETWORK_PORT).toUInt();
+    if (StartWebSocketServer(ifaceAddresses.first(), Server::WIFI)) {
+        QStringList broadcastDataList;
+        broadcastDataList.append(QCoreApplication::applicationName());
+        broadcastDataList.append(QCoreApplication::applicationVersion());
+        broadcastDataList.append(QSysInfo::kernelType());
+        broadcastDataList.append(QSysInfo::machineHostName());
+        broadcastDataList.append(appSettings->Get(DEVICE_ID).toString());
 
-    connect(wifiTimer, &QTimer::timeout, this, [=](){ sendBroadcast(broadcastData, broadcastAddr, broadcastPort); });
-    wifiTimer->start(WIFI_BROADCAST_INTERVAL);
+        QString broadcastDataStr = broadcastDataList.join(BROADCAST_DATA_SEPERATOR);
+
+        QHostAddress broadcastAddr = addrEntry.broadcast();
+        QByteArray broadcastData = broadcastDataStr.toUtf8().toBase64();
+        ushort broadcastPort = appSettings->Get(NETWORK_PORT).toUInt();
+
+        connect(wifiTimer, &QTimer::timeout, this, [=](){ sendBroadcast(broadcastData, broadcastAddr, broadcastPort); });
+        wifiTimer->start(WIFI_BROADCAST_INTERVAL);
+    }
 }
 
 void OpenMic::initBluetooth()
@@ -178,41 +153,43 @@ void OpenMic::initBluetooth()
     btTimer->start(BT_CHECK_INTERVAL);
 
     rfcommServer = new QBluetoothServer(QBluetoothServiceInfo::RfcommProtocol, this);
-    connect(rfcommServer, &QBluetoothServer::newConnection, this, &OpenMic::btClientConnected);
+    connect(rfcommServer, &QBluetoothServer::newConnection, this, [=](){ server->onNewConnection(Server::BLUETOOTH); });
 
     QBluetoothAddress localAdapter = QBluetoothAddress();
     bool result = rfcommServer->listen(localAdapter);
 
     if (!result) {
         qWarning() << "Cannot bind OpenMic Server (Bluetooth) to" << localAdapter.toString();
-    } else {
-        qDebug() << "Successful launch of OpenMic Server (Bluetooth)";
+        return;
     }
 
-    serviceInfo.setAttribute(QBluetoothServiceInfo::ServiceName, "pl.grzybdev.openmic.server");
-    serviceInfo.setAttribute(QBluetoothServiceInfo::ServiceDescription, QCoreApplication::applicationName());
-    serviceInfo.setAttribute(QBluetoothServiceInfo::ServiceProvider, QCoreApplication::organizationName());
+    if (!bluetoothInitialized) {
+        serviceInfo.setAttribute(QBluetoothServiceInfo::ServiceName, SERVER_ID);
+        serviceInfo.setAttribute(QBluetoothServiceInfo::ServiceDescription, QCoreApplication::applicationName());
+        serviceInfo.setAttribute(QBluetoothServiceInfo::ServiceProvider, QCoreApplication::organizationName());
 
-    static const QLatin1String serviceUuid("6b310fa0-ab0a-4008-8b6a-89b41cb1ccad");
-    serviceInfo.setServiceUuid(QBluetoothUuid(serviceUuid));
+        static const QLatin1String serviceUuid(SERVER_GUID);
+        serviceInfo.setServiceUuid(QBluetoothUuid(serviceUuid));
 
-    QBluetoothServiceInfo::Sequence publicBrowse;
-    publicBrowse << QVariant::fromValue(QBluetoothUuid(QBluetoothUuid::ServiceClassUuid::PublicBrowseGroup));
-    serviceInfo.setAttribute(QBluetoothServiceInfo::BrowseGroupList,
-                             publicBrowse);
+        QBluetoothServiceInfo::Sequence publicBrowse;
+        publicBrowse << QVariant::fromValue(QBluetoothUuid(QBluetoothUuid::ServiceClassUuid::PublicBrowseGroup));
+        serviceInfo.setAttribute(QBluetoothServiceInfo::BrowseGroupList,
+                                 publicBrowse);
 
-    QBluetoothServiceInfo::Sequence protocolDescriptorList;
-    QBluetoothServiceInfo::Sequence protocol;
-    protocol << QVariant::fromValue(QBluetoothUuid(QBluetoothUuid::ProtocolUuid::L2cap));
-    protocolDescriptorList.append(QVariant::fromValue(protocol));
-    protocol.clear();
-    protocol << QVariant::fromValue(QBluetoothUuid(QBluetoothUuid::ProtocolUuid::Rfcomm))
-             << QVariant::fromValue(quint8(rfcommServer->serverPort()));
-    protocolDescriptorList.append(QVariant::fromValue(protocol));
-    serviceInfo.setAttribute(QBluetoothServiceInfo::ProtocolDescriptorList,
-                             protocolDescriptorList);
+        QBluetoothServiceInfo::Sequence protocolDescriptorList;
+        QBluetoothServiceInfo::Sequence protocol;
+        protocol << QVariant::fromValue(QBluetoothUuid(QBluetoothUuid::ProtocolUuid::L2cap));
+        protocolDescriptorList.append(QVariant::fromValue(protocol));
+        protocol.clear();
+        protocol << QVariant::fromValue(QBluetoothUuid(QBluetoothUuid::ProtocolUuid::Rfcomm))
+                 << QVariant::fromValue(quint8(rfcommServer->serverPort()));
+        protocolDescriptorList.append(QVariant::fromValue(protocol));
+        serviceInfo.setAttribute(QBluetoothServiceInfo::ProtocolDescriptorList,
+                                 protocolDescriptorList);
 
-    serviceInfo.registerService(localAdapter);
+        serviceInfo.registerService(localAdapter);
+        bluetoothInitialized = true;
+    }
 }
 
 void OpenMic::checkBluetoothSupport()
@@ -226,50 +203,6 @@ void OpenMic::checkBluetoothSupport()
         status = tr("Bluetooth is either disabled or not available on your device!");
 
     emit changeConnectionStatus(Server::BLUETOOTH, isSupported, status);
-}
-
-void OpenMic::btClientConnected()
-{
-    QBluetoothSocket *socket = rfcommServer->nextPendingConnection();
-
-    if (!socket)
-        return;
-
-    connect(socket, &QBluetoothSocket::readyRead, this, &OpenMic::btReadSocket);
-    connect(socket, &QBluetoothSocket::disconnected, this, QOverload<>::of(&OpenMic::btClientDisconnected));
-
-    clientSockets.append(socket);
-    clientNames[socket] = socket->peerName();
-
-    qDebug() << "Bluetooth client connected:" << socket->peerName();
-}
-
-void OpenMic::btReadSocket()
-{
-    QBluetoothSocket *socket = qobject_cast<QBluetoothSocket *>(sender());
-
-    if (!socket)
-        return;
-
-    while (socket->canReadLine()) {
-        QByteArray line = socket->readLine().trimmed();
-        qDebug() << "Received message from: " << clientNames[socket] << ", message:" << QString::fromUtf8(line.constData(), line.length());
-    }
-}
-
-void OpenMic::btClientDisconnected()
-{
-    QBluetoothSocket *socket = qobject_cast<QBluetoothSocket *>(sender());
-
-    if (!socket)
-        return;
-
-    qDebug() << "Client disconnected:" << clientNames[socket];
-
-    clientSockets.removeOne(socket);
-    clientNames.remove(socket);
-
-    socket->deleteLater();
 }
 
 void OpenMic::sendBroadcast(QByteArray broadcastData, QHostAddress broadcastAddr, ushort broadcastPort)
