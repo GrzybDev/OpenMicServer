@@ -16,9 +16,9 @@ public:
     Server(const Server&) {}
 
     static Server & getInstance() {
-        static Server * _instance = 0;
+        static Server * _instance = nullptr;
 
-        if ( _instance == 0 )
+        if ( _instance == nullptr )
             _instance = new Server();
 
         return *_instance;
@@ -45,17 +45,19 @@ signals:
     void onDisconnected();
 
 public slots:
-    void onNewConnection(QWebSocketServer* context, Server::CONNECTOR connector);
+    void onNewConnection(Server::CONNECTOR connector);
     void onClosed();
 
 private:
-    QWebSocket* connectedClient = nullptr;
+    QObject* connectedClient = nullptr;
+    CONNECTOR connectedVia;
+    bool isClientConnected = false;
+
     QTimer* pingTimer;
     Audio* audioHandler;
 
-    bool isClientConnected = false;
-
 private slots:
+    void processBluetooth();
     void processCommand(QString message);
     void processAudioData(QByteArray message);
     void socketDisconnected();

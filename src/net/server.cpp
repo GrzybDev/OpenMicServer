@@ -3,6 +3,9 @@
 #include <QWebSocket>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QBluetoothSocket>
+
+#include "../openmic.h"
 
 Server::Server(QObject *parent)
     : QObject{parent}
@@ -14,25 +17,49 @@ Server::Server(QObject *parent)
     connect(pingTimer, &QTimer::timeout, this, &Server::ping);
 }
 
-void Server::onNewConnection(QWebSocketServer* context, Server::CONNECTOR connector)
+void Server::onNewConnection(Server::CONNECTOR connector)
 {
-    QWebSocket *pSocket = context->nextPendingConnection();
+    OpenMic* openmic = &OpenMic::getInstance();
+    QObject* socket;
+
+    if (connector == Server::BLUETOOTH) {
+        socket = openmic->rfcommServer->nextPendingConnection();
+    } else {
+        socket = openmic->webSockets[connector]->nextPendingConnection();
+    }
 
     if (isClientConnected) {
-        qDebug() << "One client is already connected, cannot handle additional one, disconnecting...";
+        qDebug() << "One client is already connected (current connector:" << connectedVia << ", requested connector:" << connector << "), cannot handle additional one, disconnecting...";
 
-        pSocket->close(QWebSocketProtocol::CloseCodePolicyViolated, tr("Connection denied. Another client is already connected!"));
+        if (connector == Server::BLUETOOTH) {
+            QBluetoothSocket* btSocket = qobject_cast<QBluetoothSocket*>(socket);
+            btSocket->close();
+        } else {
+            QWebSocket* webSocket = qobject_cast<QWebSocket*>(socket);
+            webSocket->close(QWebSocketProtocol::CloseCodePolicyViolated, tr("Connection denied. Another client is already connected!"));
+        }
+
         return;
     }
 
     isClientConnected = true;
-    connectedClient = pSocket;
+    connectedClient = socket;
+    connectedVia = connector;
 
-    qDebug() << "Client connected (Connection type:" << connector << ")";
+    if (connector == Server::BLUETOOTH) {
+        QBluetoothSocket* btSocket = qobject_cast<QBluetoothSocket*>(socket);
+        qDebug() << "Client connected (Connection type:" << connector << ", client address:" << btSocket->peerName() << ")";
 
-    connect(pSocket, &QWebSocket::textMessageReceived, this, &Server::processCommand);
-    connect(pSocket, &QWebSocket::binaryMessageReceived, this, &Server::processAudioData);
-    connect(pSocket, &QWebSocket::disconnected, this, &Server::socketDisconnected);
+        connect(btSocket, &QBluetoothSocket::readyRead, this, &Server::processBluetooth);
+        connect(btSocket, &QBluetoothSocket::disconnected, this, &Server::socketDisconnected);
+    } else {
+        QWebSocket* webSocket = qobject_cast<QWebSocket*>(socket);
+        qDebug() << "Client connected (Connection type:" << connector << ", client address:" << webSocket->peerAddress() << ")";
+
+        connect(webSocket, &QWebSocket::textMessageReceived, this, &Server::processCommand);
+        connect(webSocket, &QWebSocket::binaryMessageReceived, this, &Server::processAudioData);
+        connect(webSocket, &QWebSocket::disconnected, this, &Server::socketDisconnected);
+    }
 
     Settings* settings = &Settings::getInstance();
     pingTimer->start(settings->Get(NETWORK_PING_INTERVAL).toUInt());
@@ -43,24 +70,51 @@ void Server::onClosed()
     qDebug() << "Connection closed!";
 }
 
+void Server::processBluetooth()
+{
+    QBluetoothSocket *socket = qobject_cast<QBluetoothSocket *>(connectedClient);
+
+    while (socket->canReadLine()) {
+        QByteArray message = socket->readLine().trimmed();
+        QJsonDocument jsonCommand = QJsonDocument::fromJson(message);
+
+        if (jsonCommand.isNull())
+            processAudioData(message);
+        else
+            processCommand(QString::fromUtf8(message.constData(), message.length()));
+    }
+}
+
 void Server::processCommand(QString message)
 {
-    QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
-
     qDebug() << "<--" << message;
 
     QJsonDocument jsonCommand = QJsonDocument::fromJson(message.toUtf8());
 
     if (jsonCommand.isNull()) {
         qDebug() << "Received invalid text data! Disconnecting...";
-        pClient->close(QWebSocketProtocol::CloseCodeProtocolError, tr("Invalid text data, disconnecting..."));
+
+        if (connectedVia == Server::BLUETOOTH) {
+            QBluetoothSocket* btSocket = qobject_cast<QBluetoothSocket *>(connectedClient);
+            btSocket->close();
+        } else {
+            QWebSocket* webSocket = qobject_cast<QWebSocket*>(connectedClient);
+            webSocket->close(QWebSocketProtocol::CloseCodeProtocolError, tr("Invalid text data, disconnecting..."));
+        }
     } else {
         QJsonObject jsonObject = jsonCommand.object();
         QString response = handler->HandleCommand(jsonObject);
 
         if (response == "") {
             qDebug() << "No response generated. Disconnecting...";
-            pClient->close(QWebSocketProtocol::CloseCodeBadOperation, tr("Invalid text data, disconnecting..."));
+
+            if (connectedVia == Server::BLUETOOTH) {
+                QBluetoothSocket* btSocket = qobject_cast<QBluetoothSocket *>(connectedClient);
+                btSocket->close();
+            } else {
+                QWebSocket* webSocket = qobject_cast<QWebSocket*>(connectedClient);
+                webSocket->close(QWebSocketProtocol::CloseCodeBadOperation, tr("No response generated, disconnecting..."));
+            }
         } else {
             if (response == "DELAYED_RESPONSE") {
                 // Other module will send response
@@ -68,7 +122,14 @@ void Server::processCommand(QString message)
             }
 
             qDebug() << "-->" << response;
-            pClient->sendTextMessage(response);
+
+            if (connectedVia == Server::BLUETOOTH) {
+                QBluetoothSocket* btSocket = qobject_cast<QBluetoothSocket *>(connectedClient);
+                btSocket->write(response.toUtf8());
+            } else {
+                QWebSocket* webSocket = qobject_cast<QWebSocket*>(connectedClient);
+                webSocket->sendTextMessage(response);
+            }
 
             emit onMessageSent();
         }
@@ -83,16 +144,15 @@ void Server::processAudioData(QByteArray message)
 
 void Server::socketDisconnected()
 {
-    QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
+    qDebug() << "Client disconnected!";
 
-    qDebug() << "Socket disconnected!";
-
-    if (pClient) {
+    if (connectedClient) {
         isClientConnected = false;
-        connectedClient = nullptr;
-        pingTimer->stop();
 
-        pClient->deleteLater();
+        connectedClient->deleteLater();
+        connectedClient = nullptr;
+
+        pingTimer->stop();
     }
 
     emit onDisconnected();
@@ -102,14 +162,28 @@ void Server::sendMessage(QString message)
 {
     if (isClientConnected) {
         qDebug() << "-->" << message;
-        connectedClient->sendTextMessage(message);
+
+        if (connectedVia == Server::BLUETOOTH) {
+            QBluetoothSocket* btSocket = qobject_cast<QBluetoothSocket *>(connectedClient);
+            btSocket->write(message.toUtf8());
+        } else {
+            QWebSocket* webSocket = qobject_cast<QWebSocket*>(connectedClient);
+            webSocket->sendTextMessage(message);
+        }
     }
 }
 
 void Server::ping()
 {
+    if (connectedVia == CONNECTOR::BLUETOOTH) {
+        pingTimer->stop();
+        return;
+    }
+
+    QWebSocket* webSocket = qobject_cast<QWebSocket*>(connectedClient);
+
     if (isClientConnected) {
-        connectedClient->ping();
+        webSocket->ping();
     } else {
         pingTimer->stop();
     }
@@ -137,6 +211,13 @@ void Server::serverDisconnect(EXIT_CODE exitCode, bool waitForMessageSend)
 void Server::clientDisconnect()
 {
     if (isClientConnected) {
-        connectedClient->close();
+
+        if (connectedVia == Server::BLUETOOTH) {
+            QBluetoothSocket* btSocket = qobject_cast<QBluetoothSocket *>(connectedClient);
+            btSocket->close();
+        } else {
+            QWebSocket* webSocket = qobject_cast<QWebSocket*>(connectedClient);
+            webSocket->close();
+        }
     }
 }
