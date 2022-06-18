@@ -60,11 +60,9 @@ jobs:
         sudo snap connect cqtdeployer:removable-media
         sudo snap connect cqtdeployer:system-backup
 
-    - name: Generate Makefile
-      run: qmake CONFIG+=debug
-
-    - name: Run build-wrapper
-      run: |
+    - name: Build
+      run: | 
+        qmake CONFIG+=debug
         build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} make
 
     - name: Deploy debug version
@@ -90,12 +88,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    # Initializes the CodeQL tools for scanning.
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
+    - name: Set up Visual Studio shell
+      uses: egor-tensin/vs-shell@v2
       with:
-        config-file: ./.github/codeql/codeql-config.yml
-        languages: "cpp"
+        arch: x64
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
@@ -103,10 +99,12 @@ jobs:
         modules: 'qtwebsockets qtmultimedia qtconnectivity'
         version: 6.2.4
 
-    - name: Set up Visual Studio shell
-      uses: egor-tensin/vs-shell@v2
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
       with:
-        arch: x64
+        config-file: ./.github/codeql/codeql-config.yml
+        languages: "cpp"
 
     - name: Build
       shell: cmd
