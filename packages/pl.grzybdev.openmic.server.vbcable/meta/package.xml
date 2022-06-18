@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<Package>
+    <DisplayName>VB-CABLE Virtual Audio Device</DisplayName>
+    <DisplayName xml:lang="pl_PL">Wirtualne urządzenie audio VB-CABLE</DisplayName>
+    <Description>VB-CABLE is a virtual audio device working as virtual audio cable. Required for OpenMic to work.</Description>
+    <Description xml:lang="pl">VB-CABLE to wirtualne urządzenie audio które działa jako wirtualny kabel. Wymagane do pracy OpenMic</Description>
+    <Version>0</Version>
+    <ReleaseDate></ReleaseDate>
+    <AutoDependOn>pl.grzybdev.openmic.server</AutoDependOn>
+    <Script>installscript.qs</Script>
+    <Licenses>
+        <License name="VB-Cable" file="LICENSE.md" />
+    </Licenses>
+</Package>
