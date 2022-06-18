@@ -6,7 +6,7 @@
 #include "../../settings.h"
 #include <QDialog>
 
-class PacketSystem : public QObject, private Packet
+class PacketSystem : public Packet
 {
     Q_OBJECT
     Q_INTERFACES(Packet)
@@ -14,7 +14,7 @@ class PacketSystem : public QObject, private Packet
 public:
     explicit PacketSystem(QObject *parent = nullptr);
 
-    QString Handle(MESSAGE type, QJsonObject data);
+    QString Handle(MESSAGE type, QJsonObject data) override;
 
 private:
     Settings *appSettings;

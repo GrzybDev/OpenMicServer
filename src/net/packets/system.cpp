@@ -7,7 +7,7 @@
 #include "../../ui/DialogDeviceAuth/deviceauthdialog.h"
 
 PacketSystem::PacketSystem(QObject *parent)
-    : QObject{parent}
+    : Packet{parent}
 {
     appSettings = & Settings::getInstance();
 }

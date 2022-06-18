@@ -4,7 +4,7 @@
 #include "../../ui/DialogDeviceAuth/deviceauthdialog.h"
 
 PacketAuth::PacketAuth(QObject *parent)
-    : QObject{parent}
+    : Packet{parent}
 {
 
 }

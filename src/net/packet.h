@@ -1,12 +1,18 @@
 #ifndef PACKET_H
 #define PACKET_H
 
+#include <QObject>
 #include <QJsonObject>
+
 #include "message.h"
 
-class Packet
+class Packet : public QObject
 {
+    Q_OBJECT
+
 public:
+    using QObject::QObject;
+
     virtual QString Handle(MESSAGE type, QJsonObject data) = 0;
 };
 

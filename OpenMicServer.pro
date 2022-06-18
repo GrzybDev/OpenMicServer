@@ -12,6 +12,7 @@ SOURCES += \
     src/audio.cpp \
     src/main.cpp \
     src/net/handler.cpp \
+    src/net/packet.cpp \
     src/net/packets/auth.cpp \
     src/net/packets/system.cpp \
     src/net/server.cpp \

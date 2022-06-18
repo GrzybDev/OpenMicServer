@@ -4,7 +4,7 @@
 #include <QObject>
 #include "../packet.h"
 
-class PacketAuth : public QObject, private Packet
+class PacketAuth : public Packet
 {
     Q_OBJECT
     Q_INTERFACES(Packet)
@@ -21,7 +21,8 @@ public:
         return *_instance;
     }
 
-    QString Handle(MESSAGE type, QJsonObject data);
+    QString Handle(MESSAGE type, QJsonObject data) override;
+
     QString handleClientSide(QJsonObject data);
 
 private:
