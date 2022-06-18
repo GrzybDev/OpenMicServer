@@ -14,7 +14,7 @@ void Audio::initialize()
     audioDev = settings->GetAudioDevice();
     audioFormat = QAudioFormat();
 
-    audioFormat.setSampleRate(44100);
+    audioFormat.setSampleRate(8000);
     audioFormat.setSampleFormat(QAudioFormat::Int16);
     audioFormat.setChannelConfig(QAudioFormat::ChannelConfigMono);
     audioFormat.setChannelCount(1);
