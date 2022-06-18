@@ -80,15 +80,10 @@ QString PacketSystem::handleGoodbye(QJsonObject data)
     int exitCodeInt = data.value("exitCode").toInt();
     EXIT_CODE exitCode = static_cast<EXIT_CODE>(exitCodeInt);
 
-    switch (exitCode)
-    {
-        case CANCELED_AUTH_CODE_DIALOG:
-            dialogDeviceAuth->close();
-            break;
-        default:
-            qDebug() << "Received goodbye message, no additional actions are required!";
-            break;
-    }
+    if (exitCode == CANCELED_AUTH_CODE_DIALOG)
+        dialogDeviceAuth->close();
+    else
+        qDebug() << "Received goodbye message, no additional actions are required!";
 
     Server* server = &Server::getInstance();
     server->clientDisconnect();

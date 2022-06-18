@@ -64,6 +64,9 @@ void MainWindow::changeStatus(Server::CONNECTOR connector, bool isEnabled, QStri
         case Server::WIFI:
             affectedLbl = ui->wifiStatus;
             break;
+        default:
+            qCritical() << "Connector doesn't have QLabel to update! (Connector:" << connector << ")";
+            return;
     }
 
     QString pixPath = ":/icons/";

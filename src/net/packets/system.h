@@ -6,7 +6,7 @@
 #include "../../settings.h"
 #include <QDialog>
 
-class PacketSystem : public QObject, public Packet
+class PacketSystem : public QObject, private Packet
 {
     Q_OBJECT
     Q_INTERFACES(Packet)

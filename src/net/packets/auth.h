@@ -4,7 +4,7 @@
 #include <QObject>
 #include "../packet.h"
 
-class PacketAuth : public QObject, public Packet
+class PacketAuth : public QObject, private Packet
 {
     Q_OBJECT
     Q_INTERFACES(Packet)
