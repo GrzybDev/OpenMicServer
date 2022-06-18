@@ -74,15 +74,13 @@ void Server::processBluetooth()
 {
     QBluetoothSocket *socket = qobject_cast<QBluetoothSocket *>(connectedClient);
 
-    while (socket->canReadLine()) {
-        QByteArray message = socket->readLine().trimmed();
-        QJsonDocument jsonCommand = QJsonDocument::fromJson(message);
+    QByteArray message = socket->readAll();
+    QJsonDocument jsonCommand = QJsonDocument::fromJson(message.trimmed());
 
-        if (jsonCommand.isNull())
-            processAudioData(message);
-        else
-            processCommand(QString::fromUtf8(message.constData(), message.length()));
-    }
+    if (jsonCommand.isNull())
+        processAudioData(message);
+    else
+        processCommand(QString::fromUtf8(message.constData(), message.length()));
 }
 
 void Server::processCommand(QString message)
