@@ -7,7 +7,7 @@
     <Version>10</Version>
     <ReleaseDate></ReleaseDate>
     <Licenses>
-        <License name="License Agreement" file="LICENSE.md" />
+        <License name="OpenMic Server" file="LICENSE.md" />
     </Licenses>
     <Default>true</Default>
     <Essential>true</Essential>
