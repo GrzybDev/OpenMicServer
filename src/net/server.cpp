@@ -104,14 +104,16 @@ void Server::processCommand(QString message)
         QString response = handler->HandleCommand(jsonObject);
 
         if (response == "") {
-            qDebug() << "No response generated. Disconnecting...";
+            if (isClientConnected) {
+                qDebug() << "No response generated. Disconnecting...";
 
-            if (connectedVia == Server::BLUETOOTH) {
-                QBluetoothSocket* btSocket = qobject_cast<QBluetoothSocket *>(connectedClient);
-                btSocket->close();
-            } else {
-                QWebSocket* webSocket = qobject_cast<QWebSocket*>(connectedClient);
-                webSocket->close(QWebSocketProtocol::CloseCodeBadOperation, tr("No response generated, disconnecting..."));
+                if (connectedVia == Server::BLUETOOTH) {
+                    QBluetoothSocket* btSocket = qobject_cast<QBluetoothSocket *>(connectedClient);
+                    btSocket->close();
+                } else {
+                    QWebSocket* webSocket = qobject_cast<QWebSocket*>(connectedClient);
+                    webSocket->close(QWebSocketProtocol::CloseCodeBadOperation, tr("No response generated, disconnecting..."));
+                }
             }
         } else {
             if (response == "DELAYED_RESPONSE") {
