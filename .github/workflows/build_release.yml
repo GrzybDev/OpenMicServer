@@ -109,7 +109,7 @@ jobs:
         mkdir packages\pl.grzybdev.openmic.server.redist.vc\data
         xcopy out\* packages\pl.grzybdev.openmic.server\data /E
         move packages\pl.grzybdev.openmic.server\data\vc_redist* packages\pl.grzybdev.openmic.server.redist.vc\data\
-        %IQTA_TOOLS%\QtInstallerFramework\4.3\bin\binarycreator.exe --offline-only -c .\installer.xml -p packages --verbose OpenMicServer_Windows_Setup.exe
+        %IQTA_TOOLS%\QtInstallerFramework\4.4\bin\binarycreator.exe --offline-only -c .\installer.xml -p packages --verbose OpenMicServer_Windows_Setup.exe
 
     - name: Upload installer to release
       uses: softprops/action-gh-release@v1
