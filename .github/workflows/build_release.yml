@@ -94,7 +94,9 @@ jobs:
         windeployqt out\OpenMicServer.exe
 
     - name: Compress build
-      run: Compress-Archive -Path .\out\* -DestinationPath OpenMicServer_Windows_Portable.zip
+      run: |
+        Compress-Archive -Path .\out\* -DestinationPath OpenMicServer_Windows_Portable.zip
+        Get-FileHash .\OpenMicServer_Windows_Portable.zip -Algorithm MD5 | Select-Object -ExpandProperty Hash | Out-File .\OpenMicServer_Windows_Portable.zip.md5
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.3.1
@@ -110,10 +112,11 @@ jobs:
         xcopy out\* packages\pl.grzybdev.openmic.server\data /E
         move packages\pl.grzybdev.openmic.server\data\vc_redist* packages\pl.grzybdev.openmic.server.redist.vc\data\
         %IQTA_TOOLS%\QtInstallerFramework\4.3\bin\binarycreator.exe --offline-only -c .\installer.xml -p packages --verbose OpenMicServer_Windows_Setup.exe
-
+    
+    - name: Compute MD5 hash for installer
+      run: Get-FileHash .\OpenMicServer_Windows_Setup.exe -Algorithm MD5 | Select-Object -ExpandProperty Hash | Out-File .\OpenMicServer_Windows_Setup.exe.md5
+      
     - name: Upload installer to release
       uses: softprops/action-gh-release@v1
       with:
-        files: |
-          ./OpenMicServer_Windows_Setup.exe
-          ./OpenMicServer_Windows_Portable.zip
+        files: ./OpenMicServer_Windows_*
