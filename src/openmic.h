@@ -7,6 +7,8 @@
 #include "net/server.h"
 #include <QUdpSocket>
 #include <QBluetoothServer>
+#include "utils.h"
+#include "ui/DialogDevicePick/devicepickdialog.h"
 
 class OpenMic : public QObject
 {
@@ -32,13 +34,18 @@ public:
 signals:
     void changeConnectionStatus(Server::CONNECTOR connector, bool isEnabled, QString statusText);
     void initError(QString errorText);
+    void updateDeviceList(QList<QPair<QString, Utils::ADB_DEVICE_STATUS>> deviceList);
 
 private:
     Settings* appSettings;
     Server* server;
 
+    QTimer* usbTimer = new QTimer(this);
     QTimer* wifiTimer = new QTimer(this);
     QTimer* btTimer = new QTimer(this);
+
+    DevicePickDialog* devicePickDialog = new DevicePickDialog();
+    QString selectedUSBDevice = "";
 
     QUdpSocket *broadcastSocket = new QUdpSocket(this);
 
@@ -53,6 +60,9 @@ private:
     void initUSB();
     void initWiFi();
     void initBluetooth();
+
+    void usbCheck();
+    void usbPrepare(QString deviceID);
 
 private slots:
     void checkBluetoothSupport();
