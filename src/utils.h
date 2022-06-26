@@ -22,6 +22,13 @@ class Utils : public QObject
     Q_OBJECT
 public:
     static bool isBluetoothSupported();
+
+    enum ADB_DEVICE_STATUS
+    {
+        OFFLINE,
+        ONLINE,
+        UNAUTHORIZED
+    };
 };
 
 #endif // UTILS_H
