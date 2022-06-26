@@ -19,6 +19,7 @@ SOURCES += \
     src/openmic.cpp \
     src/settings.cpp \
     src/ui/DialogDeviceAuth/deviceauthdialog.cpp \
+    src/ui/DialogDevicePick/devicepickdialog.cpp \
     src/ui/WindowMain/mainwindow.cpp \
     src/utils.cpp
 
@@ -34,11 +35,13 @@ HEADERS += \
     src/openmic.h \
     src/settings.h \
     src/ui/DialogDeviceAuth/deviceauthdialog.h \
+    src/ui/DialogDevicePick/devicepickdialog.h \
     src/ui/WindowMain/mainwindow.h \
     src/utils.h
 
 FORMS += \
     src/ui/DialogDeviceAuth/deviceauthdialog.ui \
+    src/ui/DialogDevicePick/devicepickdialog.ui \
     src/ui/WindowMain/mainwindow.ui
 
 TRANSLATIONS += \
