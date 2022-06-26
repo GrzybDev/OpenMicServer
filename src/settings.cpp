@@ -18,6 +18,8 @@ Settings::Settings(QObject *parent)
 
     qDebug() << "Device ID:" << Get(DEVICE_ID).toString();
     validateCommunicationPort();
+
+    Reset(USB_AUTO_CONNECT);
 }
 
 QVariant Settings::Get(QString key)
@@ -38,6 +40,8 @@ QVariant Settings::GetDefault(QString key)
         case qConstHash(NETWORK_PING_INTERVAL):
             return 20000;
         case qConstHash(DEVICE_ID):
+            return "";
+        case qConstHash(USB_AUTO_CONNECT):
             return "";
         default:
             return QVariant();

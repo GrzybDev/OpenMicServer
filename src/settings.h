@@ -13,6 +13,7 @@
 #define NETWORK_PING_INTERVAL "network/pingInterval"
 #define DEVICE_ID "deviceID"
 #define PAIRED_DEVICES "pairedDevices"
+#define USB_AUTO_CONNECT "autoConnectUSB"
 
 #define PAIRED_DEVICES_SEPERATOR ";"
 #define BROADCAST_DATA_SEPERATOR ";"
