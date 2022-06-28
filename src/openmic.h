@@ -9,6 +9,10 @@
 #include <QBluetoothServer>
 #include "utils.h"
 #include "ui/DialogDevicePick/devicepickdialog.h"
+#include <QtConcurrent/QtConcurrent>
+#include "listener/usblistener.h"
+#include "listener/wifilistener.h"
+#include "listener/bluetoothlistener.h"
 
 class OpenMic : public QObject
 {
@@ -26,47 +30,28 @@ public:
         return *_instance;
     }
 
+    Server* server;
+
+    bool StartWebSocketServer(QHostAddress hostAddress, Server::CONNECTOR connector);
     void RestartServer();
+
+    DevicePickDialog* devicePickDialog = new DevicePickDialog();
 
     QMap<Server::CONNECTOR, QWebSocketServer*> webSockets;
     QBluetoothServer* rfcommServer = nullptr;
 
 signals:
     void changeConnectionStatus(Server::CONNECTOR connector, bool isEnabled, QString statusText);
-    void initError(QString errorText);
-    void updateDeviceList(QList<QPair<QString, Utils::ADB_DEVICE_STATUS>> deviceList);
+    void showError(QString errorTitle, QString errorText);
 
 private:
     Settings* appSettings;
-    Server* server;
 
-    QTimer* usbTimer = new QTimer(this);
-    QTimer* wifiTimer = new QTimer(this);
-    QTimer* btTimer = new QTimer(this);
+    USBListener* usbListener;
+    WifiListener* wifiListener;
+    BluetoothListener* btListener;
 
-    DevicePickDialog* devicePickDialog = new DevicePickDialog();
-    QString selectedUSBDevice = "";
-
-    QUdpSocket *broadcastSocket = new QUdpSocket(this);
-
-    QBluetoothServiceInfo serviceInfo;
-    QList<QBluetoothSocket *> clientSockets;
-    QMap<QBluetoothSocket *, QString> clientNames;
-    bool bluetoothInitialized = false;
-
-    bool StartWebSocketServer(QHostAddress hostAddress, Server::CONNECTOR connector);
     void StopServers();
-
-    void initUSB();
-    void initWiFi();
-    void initBluetooth();
-
-    void usbCheck();
-    void usbPrepare(QString deviceID);
-
-private slots:
-    void checkBluetoothSupport();
-    void sendBroadcast(QByteArray broadcastData, QHostAddress broadcastAddr, ushort broadcastPort);
 };
 
 #endif // OPENMIC_H
