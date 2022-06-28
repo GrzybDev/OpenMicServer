@@ -10,6 +10,9 @@ CONFIG += c++17
 
 SOURCES += \
     src/audio.cpp \
+    src/listener/bluetoothlistener.cpp \
+    src/listener/usblistener.cpp \
+    src/listener/wifilistener.cpp \
     src/main.cpp \
     src/net/handler.cpp \
     src/net/packet.cpp \
@@ -20,11 +23,18 @@ SOURCES += \
     src/settings.cpp \
     src/ui/DialogDeviceAuth/deviceauthdialog.cpp \
     src/ui/DialogDevicePick/devicepickdialog.cpp \
+    src/ui/SettingsAudio/settingsaudio.cpp \
+    src/ui/SettingsDevices/settingsdevices.cpp \
+    src/ui/SettingsNetwork/settingsnetwork.cpp \
+    src/ui/SettingsSystem/settingssystem.cpp \
     src/ui/WindowMain/mainwindow.cpp \
     src/utils.cpp
 
 HEADERS += \
     src/audio.h \
+    src/listener/bluetoothlistener.h \
+    src/listener/usblistener.h \
+    src/listener/wifilistener.h \
     src/net/exitcode.h \
     src/net/handler.h \
     src/net/message.h \
@@ -36,12 +46,20 @@ HEADERS += \
     src/settings.h \
     src/ui/DialogDeviceAuth/deviceauthdialog.h \
     src/ui/DialogDevicePick/devicepickdialog.h \
+    src/ui/SettingsAudio/settingsaudio.h \
+    src/ui/SettingsDevices/settingsdevices.h \
+    src/ui/SettingsNetwork/settingsnetwork.h \
+    src/ui/SettingsSystem/settingssystem.h \
     src/ui/WindowMain/mainwindow.h \
     src/utils.h
 
 FORMS += \
     src/ui/DialogDeviceAuth/deviceauthdialog.ui \
     src/ui/DialogDevicePick/devicepickdialog.ui \
+    src/ui/SettingsAudio/settingsaudio.ui \
+    src/ui/SettingsDevices/settingsdevices.ui \
+    src/ui/SettingsNetwork/settingsnetwork.ui \
+    src/ui/SettingsSystem/settingssystem.ui \
     src/ui/WindowMain/mainwindow.ui
 
 TRANSLATIONS += \
