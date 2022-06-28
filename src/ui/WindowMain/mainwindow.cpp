@@ -5,6 +5,11 @@
 #include <QMessageBox>
 #include <QPainter>
 
+#include "../SettingsAudio/settingsaudio.h"
+#include "../SettingsDevices/settingsdevices.h"
+#include "../SettingsNetwork/settingsnetwork.h"
+#include "../SettingsSystem/settingssystem.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -90,3 +95,31 @@ void MainWindow::changeStatus(Server::CONNECTOR connector, bool isEnabled, QStri
     affectedLbl->setPixmap(*pix);
     affectedLbl->setToolTip(statusText);
 }
+
+void MainWindow::on_actionAudio_triggered()
+{
+    SettingsAudio settingsAudio;
+    settingsAudio.exec();
+}
+
+
+void MainWindow::on_actionNetwork_triggered()
+{
+    SettingsNetwork settingsNetwork;
+    settingsNetwork.exec();
+}
+
+
+void MainWindow::on_actionDevices_triggered()
+{
+    SettingsDevices settingsDevices;
+    settingsDevices.exec();
+}
+
+
+void MainWindow::on_actionSystem_triggered()
+{
+    SettingsSystem settingsSystem;
+    settingsSystem.exec();
+}
+
