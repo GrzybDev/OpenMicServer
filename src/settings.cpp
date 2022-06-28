@@ -33,6 +33,21 @@ QVariant Settings::GetDefault(QString key)
     {
         case qConstHash(AUDIO_DEVICE):
             return mDevices->defaultAudioOutput().description();
+        case qConstHash(AUDIO_SAMPLE_RATE): {
+            QAudioDevice dev = GetAudioDevice();
+            QAudioFormat format = dev.preferredFormat();
+            return format.sampleRate();
+        }
+        case qConstHash(AUDIO_SAMPLE_FORMAT): {
+            QAudioDevice dev = GetAudioDevice();
+            QAudioFormat format = dev.preferredFormat();
+            return format.sampleFormat();
+        }
+        case qConstHash(AUDIO_CHANNEL_CONFIG): {
+            QAudioDevice dev = GetAudioDevice();
+            QAudioFormat format = dev.preferredFormat();
+            return format.channelConfig();
+        }
         case qConstHash(NETWORK_PORT):
             return 10000;
         case qConstHash(NETWORK_INTERFACE):

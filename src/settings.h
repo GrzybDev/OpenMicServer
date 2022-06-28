@@ -8,6 +8,9 @@
 #include <QMediaDevices>
 
 #define AUDIO_DEVICE "audio/device"
+#define AUDIO_SAMPLE_RATE "audio/sampleRate"
+#define AUDIO_SAMPLE_FORMAT "audio/sampleFormat"
+#define AUDIO_CHANNEL_CONFIG "audio/channelConfig"
 #define NETWORK_INTERFACE "network/interface"
 #define NETWORK_PORT "network/port"
 #define NETWORK_PING_INTERVAL "network/pingInterval"
