@@ -18,7 +18,13 @@ public:
 
 public slots:
     void changeStatus(Server::CONNECTOR connector, bool isEnabled, QString statusText);
-    void showWarning(QString warningTitle, QString warningText);
+    void showError(QString errorTitle, QString errorText);
+
+private slots:
+    void on_actionAudio_triggered();
+    void on_actionNetwork_triggered();
+    void on_actionDevices_triggered();
+    void on_actionSystem_triggered();
 
 private:
     Ui::MainWindow *ui;

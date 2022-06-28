@@ -40,14 +40,14 @@ void MainWindow::initStatus()
     }
 
     connect(openmic, &OpenMic::changeConnectionStatus, this, &MainWindow::changeStatus);
-    connect(openmic, &OpenMic::initError, this, [=](QString warningText){ this->showWarning(tr("Initialization failed!"), warningText); });
+    connect(openmic, &OpenMic::showError, this, [=](QString errorTitle, QString errorText){ this->showError(errorTitle, errorText); });
 }
 
-void MainWindow::showWarning(QString warningTitle, QString warningText)
+void MainWindow::showError(QString errorTitle, QString errorText)
 {
-    QMessageBox::warning(this,
-                         warningTitle,
-                         warningText);
+    QMessageBox::critical(this,
+                          errorTitle,
+                          errorText);
 }
 
 void MainWindow::changeStatus(Server::CONNECTOR connector, bool isEnabled, QString statusText)
