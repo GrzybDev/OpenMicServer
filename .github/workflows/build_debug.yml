@@ -99,19 +99,21 @@ jobs:
         modules: 'qtwebsockets qtmultimedia qtconnectivity'
         version: 6.2.4
 
-    # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
         queries: security-and-quality
         languages: "cpp"
-        source-root: $GITHUB_WORKSPACE\src
+        source-root: src
 
     - name: Build
       shell: cmd
       run: |
         qmake CONFIG+=debug
         nmake
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
 
     - name: Deploy debug version
       shell: cmd
@@ -125,6 +127,3 @@ jobs:
       with:
         name: WindowsBuild
         path: out
-
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
