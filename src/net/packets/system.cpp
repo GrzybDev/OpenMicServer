@@ -49,7 +49,7 @@ QString PacketSystem::handleHello(QJsonObject data)
         clientValid = true; // Ignore version if not official app
 
     if (clientValid) {
-        QString knownIDsRaw = appSettings->Get(PAIRED_DEVICES).toString();
+        QString knownIDsRaw = appSettings->Get(DEVICE_PAIRED).toString();
         QStringList knownIDs = knownIDsRaw.split(PAIRED_DEVICES_SEPERATOR);
         bool needAuth = !knownIDs.contains(clientID);
 

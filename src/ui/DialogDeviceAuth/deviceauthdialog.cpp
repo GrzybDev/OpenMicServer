@@ -40,13 +40,13 @@ void DeviceAuthDialog::onAuthCodeReceived(int authCode)
 
         Settings* settings = &Settings::getInstance();
 
-        QString knownIDsRaw = settings->Get(PAIRED_DEVICES).toString();
+        QString knownIDsRaw = settings->Get(DEVICE_PAIRED).toString();
         QStringList knownIDs = knownIDsRaw.split(PAIRED_DEVICES_SEPERATOR);
 
         knownIDs.append(server->connectedClientID);
         knownIDsRaw = knownIDs.join(PAIRED_DEVICES_SEPERATOR);
 
-        settings->Set(PAIRED_DEVICES, knownIDsRaw);
+        settings->Set(DEVICE_PAIRED, knownIDsRaw);
 
         qDebug() << "Added" << server->connectedClientID << "to known devices list!";
         accept();
