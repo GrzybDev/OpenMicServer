@@ -2,6 +2,8 @@
 #define SETTINGSDEVICES_H
 
 #include <QDialog>
+#include <QAbstractButton>
+#include "../../settings.h"
 
 namespace Ui {
 class SettingsDevices;
@@ -15,8 +17,16 @@ public:
     explicit SettingsDevices(QWidget *parent = nullptr);
     ~SettingsDevices();
 
+private slots:
+    void on_clearAllBtn_clicked();
+
+    void on_buttonBox_clicked(QAbstractButton *button);
+
 private:
     Ui::SettingsDevices *ui;
+    Settings* appSettings;
+
+    void applyValuesFromConfig();
 };
 
 #endif // SETTINGSDEVICES_H
