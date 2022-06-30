@@ -77,64 +77,11 @@ void USBListener::usbCheck()
                 return;
             }
 
-            QProcess* adb = new QProcess();
+            QStringList devicesStr = getDevices();
+            auto devOut = parseDeviceList(devicesStr);
 
-            QString program = "adb";
-            QStringList arguments;
-            arguments << "devices";
-
-            adb->start(program, arguments);
-
-            OpenMic* omic = &OpenMic::getInstance();
-
-            if (!adb->waitForStarted()) {
-                QString errorStr = tr("Failed to get device list from ADB because executable became unavailable, disabled USB functionality");
-
-                emit omic->changeConnectionStatus(Server::USB, false, errorStr);
-                emit omic->showError(tr("Fetch device failed"), errorStr + tr("\n\nYou won't be able to connect via USB! (If you don't intend to use USB, you can disable it in Settings -> Device)"));
-
-                emit stopListener();
-                return;
-            }
-
-            if (!adb->waitForFinished()) {
-                QString errorStr = tr("ADB took too long to return list of devices, disabled USB functionality");
-
-                emit omic->changeConnectionStatus(Server::USB, false, errorStr);
-                emit omic->showError(tr("Fetch device failed"), errorStr + tr("\n\nYou won't be able to connect via USB! (If you don't intend to use USB, you can disable it in Settings -> Device)"));
-
-                emit stopListener();
-                return;
-            }
-
-            QString output = adb->readAllStandardOutput();
-            static QRegularExpression regExp = QRegularExpression("\n|\r\n|\r");
-            QStringList devicesStr = output.split(regExp, Qt::SkipEmptyParts);
-            devicesStr.removeFirst();
-
-            QList<QPair<QString, Utils::ADB_DEVICE_STATUS>> devices;
-            QList<QString> deviceIDs;
-
-            foreach(QString device, devicesStr)
-            {
-                QStringList deviceInfoList = device.split("\t");
-                QPair<QString, Utils::ADB_DEVICE_STATUS> deviceInfo;
-
-                deviceInfo.first = deviceInfoList.first();
-
-                QString statusStr = deviceInfoList.at(1);
-
-                if (statusStr == "device") {
-                    deviceInfo.second = Utils::ONLINE;
-                } else if (statusStr == "unauthorized") {
-                    deviceInfo.second = Utils::UNAUTHORIZED;
-                } else {
-                    deviceInfo.second = Utils::OFFLINE;
-                }
-
-                devices.append(deviceInfo);
-                deviceIDs.append(deviceInfo.first);
-            }
+            QList<QPair<QString, Utils::ADB_DEVICE_STATUS>> devices = devOut.first;
+            QStringList deviceIDs = devOut.second;
 
             emit updateDeviceList(devices);
 
@@ -165,6 +112,7 @@ void USBListener::usbCheck()
 
                     usbPrepare(previousDeviceID);
                 } else {
+                    OpenMic* omic = &OpenMic::getInstance();
                     omic->devicePickDialog->show();
                 }
             } else if (devices.size() == 1) {
@@ -178,6 +126,76 @@ void USBListener::usbCheck()
             }
         });
     }
+}
+
+QStringList USBListener::getDevices()
+{
+
+    QProcess* adb = new QProcess();
+
+    QString program = "adb";
+    QStringList arguments;
+    arguments << "devices";
+
+    adb->start(program, arguments);
+
+    OpenMic* omic = &OpenMic::getInstance();
+
+    if (!adb->waitForStarted()) {
+        QString errorStr = tr("Failed to get device list from ADB because executable became unavailable, disabled USB functionality");
+
+        emit omic->changeConnectionStatus(Server::USB, false, errorStr);
+        emit omic->showError(tr("Fetch device failed"), errorStr + tr("\n\nYou won't be able to connect via USB! (If you don't intend to use USB, you can disable it in Settings -> Device)"));
+
+        emit stopListener();
+        return QStringList();
+    }
+
+    if (!adb->waitForFinished()) {
+        QString errorStr = tr("ADB took too long to return list of devices, disabled USB functionality");
+
+        emit omic->changeConnectionStatus(Server::USB, false, errorStr);
+        emit omic->showError(tr("Fetch device failed"), errorStr + tr("\n\nYou won't be able to connect via USB! (If you don't intend to use USB, you can disable it in Settings -> Device)"));
+
+        emit stopListener();
+        return QStringList();
+    }
+
+    QString output = adb->readAllStandardOutput();
+    static QRegularExpression regExp = QRegularExpression("\n|\r\n|\r");
+    QStringList devicesStr = output.split(regExp, Qt::SkipEmptyParts);
+    devicesStr.removeFirst();
+
+    return devicesStr;
+}
+
+QPair<QList<QPair<QString, Utils::ADB_DEVICE_STATUS>>, QStringList> USBListener::parseDeviceList(QStringList devicesStr)
+{
+    QList<QPair<QString, Utils::ADB_DEVICE_STATUS>> devices;
+    QStringList deviceIDs;
+
+    foreach(QString device, devicesStr)
+    {
+        QStringList deviceInfoList = device.split("\t");
+        QPair<QString, Utils::ADB_DEVICE_STATUS> deviceInfo;
+
+        deviceInfo.first = deviceInfoList.first();
+
+        QString statusStr = deviceInfoList.at(1);
+
+        if (statusStr == "device") {
+            deviceInfo.second = Utils::ONLINE;
+        } else if (statusStr == "unauthorized") {
+            deviceInfo.second = Utils::UNAUTHORIZED;
+        } else {
+            deviceInfo.second = Utils::OFFLINE;
+        }
+
+        devices.append(deviceInfo);
+        deviceIDs.append(deviceInfo.first);
+    }
+
+    return QPair<QList<QPair<QString, Utils::ADB_DEVICE_STATUS>>, QStringList>(devices, deviceIDs);
 }
 
 void USBListener::usbPrepare(QString deviceID)

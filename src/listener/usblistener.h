@@ -36,6 +36,9 @@ private:
     void initADB();
     void usbPrepare(QString deviceID);
 
+    QStringList getDevices();
+    QPair<QList<QPair<QString, Utils::ADB_DEVICE_STATUS>>, QStringList> parseDeviceList(QStringList list);
+
 private slots:
     void usbCheck();
 };
