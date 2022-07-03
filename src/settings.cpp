@@ -99,6 +99,9 @@ QAudioDevice Settings::GetAudioDevice()
 
 void Settings::Set(QString key, QVariant value)
 {
+    if (Get(key) == value)
+        return; // Don't save default value or not changed value
+
     ctx.setValue(key, value);
 }
 
