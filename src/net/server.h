@@ -40,6 +40,9 @@ public:
 
     QString connectedClientID;
 
+    void changeConnectionStatus(Server::CONNECTOR connector, bool isEnabled, QString statusText);
+    void showError(QString errorTitle, QString errorText);
+
 signals:
     void onMessageSent();
     void onDisconnected();

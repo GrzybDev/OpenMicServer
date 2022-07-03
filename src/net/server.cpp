@@ -4,6 +4,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QBluetoothSocket>
+#include "../listener/bluetoothlistener.h"
 
 #include "../openmic.h"
 
@@ -23,9 +24,10 @@ void Server::onNewConnection(Server::CONNECTOR connector)
     QObject* socket;
 
     if (connector == Server::BLUETOOTH) {
-        socket = openmic->rfcommServer->nextPendingConnection();
+        BluetoothListener* listener = qobject_cast<BluetoothListener*>(openmic->listeners[connector]);
+        socket = listener->rfcommServer->nextPendingConnection();
     } else {
-        socket = openmic->webSockets[connector]->nextPendingConnection();
+        socket = openmic->listeners[connector]->webSocket->nextPendingConnection();
     }
 
     if (isClientConnected) {
@@ -220,4 +222,16 @@ void Server::clientDisconnect()
             webSocket->close();
         }
     }
+}
+
+void Server::changeConnectionStatus(Server::CONNECTOR connector, bool isEnabled, QString statusText)
+{
+    OpenMic* openmic = &OpenMic::getInstance();
+    emit openmic->changeConnectionStatus(connector, isEnabled, statusText);
+}
+
+void Server::showError(QString errorTitle, QString errorText)
+{
+    OpenMic* openmic = &OpenMic::getInstance();
+    emit openmic->showError(errorTitle, errorText);
 }
