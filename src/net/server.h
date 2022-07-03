@@ -32,6 +32,7 @@ public:
     };
 
     Handler* handler;
+    QObject* connectedClient = nullptr;
 
     void sendMessage(QString message);
 
@@ -51,7 +52,6 @@ public slots:
     void onNewConnection(Server::CONNECTOR connector);
 
 private:
-    QObject* connectedClient = nullptr;
     CONNECTOR connectedVia;
     bool isClientConnected = false;
 
