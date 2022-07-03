@@ -17,6 +17,12 @@
 #define NETWORK_INTERFACE "network/interface"
 #define NETWORK_PORT "network/port"
 #define NETWORK_PING_INTERVAL "network/pingInterval"
+#define SUPPORT_USB "support/usb"
+#define SUPPORT_USB_POLL_INTERVAL "support/usbInterval"
+#define SUPPORT_WIFI "support/wifi"
+#define SUPPORT_WIFI_BROADCAST_INTERVAL "support/wifiInterval"
+#define SUPPORT_BT "support/bluetooth"
+#define SUPPORT_BT_CHECK_INTERVAL "support/bluetoothInterval"
 #define USB_AUTO_CONNECT "autoConnectUSB"
 
 #define PAIRED_DEVICES_SEPERATOR ";"
@@ -24,10 +30,6 @@
 
 #define PORT_MIN 1024
 #define PORT_MAX 65535
-
-#define USB_CHECK_INTERVAL 1000
-#define WIFI_BROADCAST_INTERVAL 1000
-#define BT_CHECK_INTERVAL 1000
 
 #define SERVER_ID "pl.grzybdev.openmic.server"
 #define SERVER_GUID "1bc0f9db-4faf-421d-8b21-455c03d890e1"

@@ -27,7 +27,7 @@ void USBListener::start()
 {
     pollTimer = new QTimer();
     connect(pollTimer, &QTimer::timeout, this, &USBListener::usbCheck);
-    pollTimer->start(USB_CHECK_INTERVAL);
+    pollTimer->start(appSettings->Get(SUPPORT_USB_POLL_INTERVAL).toUInt());
 }
 
 void USBListener::initADB()

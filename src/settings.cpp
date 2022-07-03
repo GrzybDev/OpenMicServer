@@ -49,6 +49,9 @@ QVariant Settings::GetDefault(QString key)
             return format.channelConfig();
         }
         case qConstHash(DEVICE_REQUIRE_PAIRING):
+        case qConstHash(SUPPORT_USB):
+        case qConstHash(SUPPORT_WIFI):
+        case qConstHash(SUPPORT_BT):
             return true;
         case qConstHash(NETWORK_PORT):
             return 10000;
@@ -56,6 +59,10 @@ QVariant Settings::GetDefault(QString key)
             return getDefaultNetworkAdapter();
         case qConstHash(NETWORK_PING_INTERVAL):
             return 20000;
+        case qConstHash(SUPPORT_USB_POLL_INTERVAL):
+        case qConstHash(SUPPORT_WIFI_BROADCAST_INTERVAL):
+        case qConstHash(SUPPORT_BT_CHECK_INTERVAL):
+            return 1000;
         default:
             return QVariant();
     }

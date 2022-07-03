@@ -19,7 +19,7 @@ void BluetoothListener::start()
 {
     pollTimer = new QTimer();
     connect(pollTimer, &QTimer::timeout, this, &BluetoothListener::btPoll);
-    pollTimer->start(BT_CHECK_INTERVAL);
+    pollTimer->start(appSettings->Get(SUPPORT_BT_CHECK_INTERVAL).toUInt());
 }
 
 void BluetoothListener::stop()

@@ -19,7 +19,7 @@ void WifiListener::start()
 {
     pollTimer = new QTimer();
     connect(pollTimer, &QTimer::timeout, this, &WifiListener::wifiPoll);
-    pollTimer->start(WIFI_BROADCAST_INTERVAL);
+    pollTimer->start(appSettings->Get(SUPPORT_WIFI_BROADCAST_INTERVAL).toUInt());
 }
 
 void WifiListener::stop()
