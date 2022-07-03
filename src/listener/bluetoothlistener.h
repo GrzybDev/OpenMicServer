@@ -7,7 +7,7 @@
 #include "../settings.h"
 #include "../ui/DialogDevicePick/devicepickdialog.h"
 #include <QtConcurrent/QtConcurrent>
-#include <QBluetoothSocket>
+#include <QBluetoothServer>
 #include "listener.h"
 
 class BluetoothListener : public Listener
@@ -18,7 +18,7 @@ public:
     explicit BluetoothListener(QObject *parent = nullptr);
     ~BluetoothListener();
 
-    BluetoothListener(const BluetoothListener&) {}
+    BluetoothListener(const BluetoothListener&): Listener(nullptr) {}
 
     static BluetoothListener & getInstance() {
         static BluetoothListener * _instance = nullptr;

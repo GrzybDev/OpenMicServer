@@ -17,7 +17,7 @@ public:
     explicit USBListener(QObject *parent = nullptr);
     ~USBListener();
 
-    USBListener(const USBListener&) {}
+    USBListener(const USBListener&): Listener(nullptr) {}
 
     static USBListener & getInstance() {
         static USBListener * _instance = nullptr;

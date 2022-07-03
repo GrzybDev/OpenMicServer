@@ -16,7 +16,7 @@ public:
     explicit WifiListener(QObject *parent = nullptr);
     ~WifiListener();
 
-    WifiListener(const WifiListener&) {}
+    WifiListener(const WifiListener&): Listener(nullptr) {}
 
     static WifiListener & getInstance() {
         static WifiListener * _instance = nullptr;
