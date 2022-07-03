@@ -67,11 +67,6 @@ void Server::onNewConnection(Server::CONNECTOR connector)
     pingTimer->start(settings->Get(NETWORK_PING_INTERVAL).toUInt());
 }
 
-void Server::onClosed()
-{
-    qDebug() << "Connection closed!";
-}
-
 void Server::processBluetooth()
 {
     QBluetoothSocket *socket = qobject_cast<QBluetoothSocket *>(connectedClient);

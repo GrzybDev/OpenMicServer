@@ -49,7 +49,6 @@ signals:
 
 public slots:
     void onNewConnection(Server::CONNECTOR connector);
-    void onClosed();
 
 private:
     QObject* connectedClient = nullptr;
