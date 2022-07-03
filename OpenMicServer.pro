@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     src/audio.cpp \
     src/listener/bluetoothlistener.cpp \
+    src/listener/listener.cpp \
     src/listener/usblistener.cpp \
     src/listener/wifilistener.cpp \
     src/main.cpp \
@@ -33,6 +34,7 @@ SOURCES += \
 HEADERS += \
     src/audio.h \
     src/listener/bluetoothlistener.h \
+    src/listener/listener.h \
     src/listener/usblistener.h \
     src/listener/wifilistener.h \
     src/net/exitcode.h \
