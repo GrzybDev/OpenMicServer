@@ -31,14 +31,10 @@ public:
     }
 
     Server* server;
-
-    bool StartWebSocketServer(QHostAddress hostAddress, Server::CONNECTOR connector);
-    void RestartServer();
-
     DevicePickDialog* devicePickDialog = new DevicePickDialog();
+    QMap<Server::CONNECTOR, Listener*> listeners;
 
-    QMap<Server::CONNECTOR, QWebSocketServer*> webSockets;
-    QBluetoothServer* rfcommServer = nullptr;
+    void RestartServer();
 
 signals:
     void changeConnectionStatus(Server::CONNECTOR connector, bool isEnabled, QString statusText);
@@ -46,12 +42,6 @@ signals:
 
 private:
     Settings* appSettings;
-
-    USBListener* usbListener;
-    WifiListener* wifiListener;
-    BluetoothListener* btListener;
-
-    void StopServers();
 };
 
 #endif // OPENMIC_H
