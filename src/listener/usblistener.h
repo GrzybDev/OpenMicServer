@@ -7,28 +7,33 @@
 #include "../settings.h"
 #include "../ui/DialogDevicePick/devicepickdialog.h"
 #include <QtConcurrent/QtConcurrent>
+#include "listener.h"
 
-class USBListener : public QObject
+class USBListener : public Listener
 {
     Q_OBJECT
+    Q_INTERFACES(Listener)
 public:
     explicit USBListener(QObject *parent = nullptr);
     ~USBListener();
 
-    void start();
+    USBListener(const USBListener&) {}
 
-public slots:
-    void stop();
+    static USBListener & getInstance() {
+        static USBListener * _instance = nullptr;
+
+        if ( _instance == nullptr )
+            _instance = new USBListener();
+
+        return *_instance;
+    }
 
 signals:
     void updateDeviceList(QList<QPair<QString, Utils::ADB_DEVICE_STATUS>> deviceList);
-    void stopListener();
 
 private:
-    Settings* appSettings;
-
     QFuture<void> pollFuture;
-    QTimer* pollTimer;
+    QTimer* pollTimer = new QTimer(this);
 
     QString selectedUSBDevice = "";
     bool usbInitialized = false;
@@ -40,6 +45,9 @@ private:
     QPair<QList<QPair<QString, Utils::ADB_DEVICE_STATUS>>, QStringList> parseDeviceList(QStringList list);
 
 private slots:
+    void start() override;
+    void stop() override;
+
     void usbCheck();
 };
 

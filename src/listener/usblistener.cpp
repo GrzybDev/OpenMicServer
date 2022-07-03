@@ -3,28 +3,30 @@
 #include "../openmic.h"
 
 USBListener::USBListener(QObject *parent)
-    : QObject{parent}
-{
-    appSettings = & Settings::getInstance();
-
-    OpenMic* omic = &OpenMic::getInstance();
-    connect(this, &USBListener::updateDeviceList, omic->devicePickDialog, &DevicePickDialog::updateDeviceList);
-    connect(this, SIGNAL(stopListener()), SLOT(stop()));
+    : Listener{parent}
+{    
+    connect(this, SIGNAL(StartListener()), SLOT(start()));
+    connect(this, SIGNAL(StopListener()), SLOT(stop()));
 }
 
 USBListener::~USBListener()
 {
-    stop();
+    emit StopListener();
 }
 
 void USBListener::stop()
 {
-    pollTimer->stop();
-    pollFuture.cancel();
+    if (pollTimer->isActive()) {
+        pollTimer->stop();
+        pollFuture.cancel();
+    }
 }
 
 void USBListener::start()
 {
+    OpenMic* omic = &OpenMic::getInstance();
+    connect(this, &USBListener::updateDeviceList, omic->devicePickDialog, &DevicePickDialog::updateDeviceList);
+
     pollTimer = new QTimer();
     connect(pollTimer, &QTimer::timeout, this, &USBListener::usbCheck);
     pollTimer->start(appSettings->Get(SUPPORT_USB_POLL_INTERVAL).toUInt());
@@ -49,7 +51,7 @@ void USBListener::initADB()
         emit omic->changeConnectionStatus(Server::USB, false, errorStr);
         emit omic->showError(tr("USB Initialization failed"), errorStr + tr("\n\nYou won't be able to connect via USB! (If you don't intend to use USB, you can disable it in Settings -> Device)"));
 
-        emit stopListener();
+        emit StopListener();
         return;
     }
 
@@ -60,11 +62,11 @@ void USBListener::initADB()
         emit omic->changeConnectionStatus(Server::USB, false, errorStr);
         emit omic->showError(tr("USB Initialization failed"), errorStr + tr("\n\nYou won't be able to connect via USB! (If you don't intend to use USB, you can disable it in Settings -> Device)"));
 
-        emit stopListener();
+        emit StopListener();
         return;
     }
 
-    omic->StartWebSocketServer(QHostAddress::LocalHost, Server::USB);
+    startWebSocket(QHostAddress::LocalHost, Server::USB);
     usbInitialized = true;
 }
 
@@ -147,7 +149,7 @@ QStringList USBListener::getDevices()
         emit omic->changeConnectionStatus(Server::USB, false, errorStr);
         emit omic->showError(tr("Fetch device failed"), errorStr + tr("\n\nYou won't be able to connect via USB! (If you don't intend to use USB, you can disable it in Settings -> Device)"));
 
-        emit stopListener();
+        emit StopListener();
         return QStringList();
     }
 
@@ -157,7 +159,7 @@ QStringList USBListener::getDevices()
         emit omic->changeConnectionStatus(Server::USB, false, errorStr);
         emit omic->showError(tr("Fetch device failed"), errorStr + tr("\n\nYou won't be able to connect via USB! (If you don't intend to use USB, you can disable it in Settings -> Device)"));
 
-        emit stopListener();
+        emit StopListener();
         return QStringList();
     }
 
