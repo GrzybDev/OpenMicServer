@@ -8,27 +8,32 @@
 #include "../ui/DialogDevicePick/devicepickdialog.h"
 #include <QtConcurrent/QtConcurrent>
 #include <QBluetoothSocket>
+#include "listener.h"
 
-class BluetoothListener : public QObject
+class BluetoothListener : public Listener
 {
     Q_OBJECT
+    Q_INTERFACES(Listener)
 public:
     explicit BluetoothListener(QObject *parent = nullptr);
     ~BluetoothListener();
 
-    void start();
+    BluetoothListener(const BluetoothListener&) {}
 
-public slots:
-    void stop();
+    static BluetoothListener & getInstance() {
+        static BluetoothListener * _instance = nullptr;
 
-signals:
-    void stopListener();
+        if ( _instance == nullptr )
+            _instance = new BluetoothListener();
+
+        return *_instance;
+    }
+
+    QBluetoothServer* rfcommServer;
 
 private:
-    Settings* appSettings;
-
     QFuture<void> pollFuture;
-    QTimer* pollTimer;
+    QTimer* pollTimer = new QTimer(this);
 
     QBluetoothServiceInfo serviceInfo;
     QList<QBluetoothSocket *> clientSockets;
@@ -39,6 +44,9 @@ private:
     void checkBluetoothSupport();
 
 private slots:
+    void start() override;
+    void stop() override;
+
     void btPoll();
 };
 

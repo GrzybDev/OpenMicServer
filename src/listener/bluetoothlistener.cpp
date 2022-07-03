@@ -3,16 +3,15 @@
 #include "../openmic.h"
 
 BluetoothListener::BluetoothListener(QObject *parent)
-    : QObject{parent}
+    : Listener{parent}
 {
-    appSettings = & Settings::getInstance();
-
-    connect(this, SIGNAL(stopListener()), SLOT(stop()));
+    connect(this, SIGNAL(StartListener()), SLOT(start()));
+    connect(this, SIGNAL(StopListener()), SLOT(stop()));
 }
 
 BluetoothListener::~BluetoothListener()
 {
-    stop();
+    emit StopListener();
 }
 
 void BluetoothListener::start()
@@ -24,8 +23,10 @@ void BluetoothListener::start()
 
 void BluetoothListener::stop()
 {
-    pollTimer->stop();
-    pollFuture.cancel();
+    if (pollTimer->isActive()) {
+        pollTimer->stop();
+        pollFuture.cancel();
+    }
 }
 
 void BluetoothListener::btPoll()
@@ -42,13 +43,13 @@ void BluetoothListener::btPoll()
 
 void BluetoothListener::initBT()
 {
-    OpenMic* omic = &OpenMic::getInstance();
+    Server* server = &Server::getInstance();
 
-    omic->rfcommServer = new QBluetoothServer(QBluetoothServiceInfo::RfcommProtocol);
-    connect(omic->rfcommServer, &QBluetoothServer::newConnection, this, [=](){ omic->server->onNewConnection(Server::BLUETOOTH); });
+    rfcommServer = new QBluetoothServer(QBluetoothServiceInfo::RfcommProtocol);
+    connect(rfcommServer, &QBluetoothServer::newConnection, this, [=](){ server->onNewConnection(Server::BLUETOOTH); });
 
     QBluetoothAddress localAdapter = QBluetoothAddress();
-    bool result = omic->rfcommServer->listen(localAdapter);
+    bool result = rfcommServer->listen(localAdapter);
 
     if (!result) {
         qWarning() << "Cannot bind OpenMic Server (Bluetooth) to" << localAdapter.toString();
@@ -74,7 +75,7 @@ void BluetoothListener::initBT()
         protocolDescriptorList.append(QVariant::fromValue(protocol));
         protocol.clear();
         protocol << QVariant::fromValue(QBluetoothUuid(QBluetoothUuid::ProtocolUuid::Rfcomm))
-                 << QVariant::fromValue(quint8(omic->rfcommServer->serverPort()));
+                 << QVariant::fromValue(quint8(rfcommServer->serverPort()));
         protocolDescriptorList.append(QVariant::fromValue(protocol));
         serviceInfo.setAttribute(QBluetoothServiceInfo::ProtocolDescriptorList,
                                  protocolDescriptorList);
