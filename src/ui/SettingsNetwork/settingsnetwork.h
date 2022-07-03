@@ -25,6 +25,8 @@ private:
     Settings* appSettings;
 
     void applyValuesFromConfig();
+
+    void setNetworkDevices();
 };
 
 #endif // SETTINGSNETWORK_H
