@@ -24,6 +24,8 @@
 #define SUPPORT_BT "support/bluetooth"
 #define SUPPORT_BT_CHECK_INTERVAL "support/bluetoothInterval"
 #define USB_AUTO_CONNECT "autoConnectUSB"
+#define SYSTEM_START_MINIMIZED "startMinimized"
+#define SYSTEM_MINIMIZE_ON_CONNECT "minimizeOnConnect"
 
 #define PAIRED_DEVICES_SEPERATOR ";"
 #define BROADCAST_DATA_SEPERATOR ";"
@@ -58,6 +60,9 @@ public:
 
     void Set(QString key, QVariant value);
     void Reset(QString key);
+
+    bool willAppRunOnSystemStartup();
+    void setAutostart(bool autostart);
 
 private:
     QSettings ctx;

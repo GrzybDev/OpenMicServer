@@ -7,6 +7,11 @@
 #include <QCoreApplication>
 #include <QMediaDevices>
 
+#ifndef Q_OS_WIN
+#include <QFile>
+#include <QDir>
+#endif
+
 Settings::Settings(QObject *parent)
     : QObject{parent}
 {
@@ -52,6 +57,7 @@ QVariant Settings::GetDefault(QString key)
         case qConstHash(SUPPORT_USB):
         case qConstHash(SUPPORT_WIFI):
         case qConstHash(SUPPORT_BT):
+        case qConstHash(SYSTEM_MINIMIZE_ON_CONNECT):
             return true;
         case qConstHash(NETWORK_PORT):
             return 10000;
@@ -144,4 +150,48 @@ QString Settings::getDefaultNetworkAdapter()
     // if we reach here, first network interface will be returned (most probably loopback))
 
     return ifaces.first().name();
+}
+
+bool Settings::willAppRunOnSystemStartup()
+{
+#ifdef Q_OS_WIN
+    QSettings bootUpSettings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+    return bootUpSettings.value("OpenMicServer", false).toBool();
+#else
+    return QFile::exists(QDir::homePath() + "/.config/autostart/OpenMicServer.desktop");
+#endif
+}
+
+void Settings::setAutostart(bool autostart)
+{
+#ifdef Q_OS_WIN
+    QSettings bootUpSettings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+
+    if (autostart)
+        bootUpSettings.setValue("OpenMicServer", QCoreApplication::applicationFilePath().replace('/', '\\'));
+    else
+        bootUpSettings.remove("OpenMicServer");
+#else
+    QFile desktopFile(QDir::homePath() + "/.config/autostart/OpenMicServer.desktop");
+
+    if (autostart)
+    {
+        if (desktopFile.open(QIODevice::ReadWrite))
+        {
+            QTextStream stream(&desktopFile);
+            stream << "[Desktop Entry]" << Qt::endl;
+            stream << "Type=Application" << Qt::endl;
+            stream << "Name=OpenMic Server" << Qt::endl;
+            stream << "Exec=" << QCoreApplication::applicationFilePath() << Qt::endl;
+            stream << "Icon=openmic" << Qt::endl;
+            stream << "Terminal=false" << Qt::endl;
+        }
+
+        desktopFile.close();
+    }
+    else
+    {
+        desktopFile.remove();
+    }
+#endif
 }
