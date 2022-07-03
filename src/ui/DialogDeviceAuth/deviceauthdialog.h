@@ -19,7 +19,7 @@ public:
     explicit DeviceAuthDialog(QWidget *parent = nullptr);
     ~DeviceAuthDialog();
 
-    DeviceAuthDialog(const DeviceAuthDialog&) {}
+    DeviceAuthDialog(const DeviceAuthDialog&): QDialog() {}
 
     static DeviceAuthDialog & getInstance() {
         static DeviceAuthDialog * _instance = 0;

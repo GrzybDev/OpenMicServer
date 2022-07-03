@@ -11,7 +11,7 @@ class Audio : public QObject
     Q_OBJECT
 public:
     explicit Audio(QObject *parent = nullptr);
-    Audio(const Audio&) {}
+    Audio(const Audio&): QObject(nullptr) {}
 
     static Audio & getInstance() {
         static Audio * _instance = nullptr;

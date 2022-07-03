@@ -19,7 +19,7 @@ class OpenMic : public QObject
     Q_OBJECT
 public:
     explicit OpenMic(QObject *parent = nullptr);
-    OpenMic(const OpenMic&) {}
+    OpenMic(const OpenMic&): QObject(nullptr) {}
 
     static OpenMic & getInstance() {
         static OpenMic * _instance = nullptr;

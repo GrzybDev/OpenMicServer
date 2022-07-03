@@ -41,7 +41,7 @@ class Settings : public QObject
     Q_OBJECT
 public:
     explicit Settings(QObject *parent = nullptr);
-    Settings(const Settings&) {}
+    Settings(const Settings&): QObject(nullptr) {}
 
     static Settings & getInstance() {
         static Settings * _instance = 0;

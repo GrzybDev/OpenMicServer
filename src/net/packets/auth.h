@@ -10,7 +10,7 @@ class PacketAuth : public Packet
     Q_INTERFACES(Packet)
 public:
     explicit PacketAuth(QObject *parent = nullptr);
-    PacketAuth(const PacketAuth&) {}
+    PacketAuth(const PacketAuth&): PacketAuth(nullptr) {}
 
     static PacketAuth & getInstance() {
         static PacketAuth * _instance = 0;

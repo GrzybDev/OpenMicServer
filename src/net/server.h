@@ -13,7 +13,7 @@ class Server : public QObject
     Q_OBJECT
 public:
     explicit Server(QObject *parent = nullptr);
-    Server(const Server&) {}
+    Server(const Server&): QObject(nullptr) {}
 
     static Server & getInstance() {
         static Server * _instance = nullptr;
