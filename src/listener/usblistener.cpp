@@ -19,6 +19,8 @@ void USBListener::stop()
     if (pollTimer->isActive()) {
         pollTimer->stop();
         pollFuture.cancel();
+        webSocket->close();
+        usbInitialized = false;
     }
 }
 
@@ -30,6 +32,8 @@ void USBListener::start()
     pollTimer = new QTimer();
     connect(pollTimer, &QTimer::timeout, this, &USBListener::usbCheck);
     pollTimer->start(appSettings->Get(SUPPORT_USB_POLL_INTERVAL).toUInt());
+
+    startWebSocket(QHostAddress::LocalHost, Server::USB);
 }
 
 void USBListener::initADB()
@@ -66,12 +70,18 @@ void USBListener::initADB()
         return;
     }
 
-    startWebSocket(QHostAddress::LocalHost, Server::USB);
     usbInitialized = true;
+    emit omic->changeConnectionStatus(Server::USB, true, tr("Waiting for your mobile device at %1:%2").arg(hostAddress.toString()).arg(port));
 }
 
 void USBListener::usbCheck()
-{
+{    
+    if (!webSocket->isListening()) {
+        OpenMic* omic = &OpenMic::getInstance();
+        emit omic->changeConnectionStatus(Server::USB, false, tr("Failed to start listener!"));
+        return;
+    }
+
     if (pollFuture.isFinished()) {
         pollFuture = QtConcurrent::run([=]() {
             if (!usbInitialized) {

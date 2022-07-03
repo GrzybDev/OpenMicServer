@@ -20,30 +20,30 @@ signals:
     void StopListener();
 
 protected:
+    QHostAddress hostAddress;
+    quint16 port;
+
     bool startWebSocket(QHostAddress hostAddress, Server::CONNECTOR connector)
     {
         Server* server = & Server::getInstance();
 
         webSocket = new QWebSocketServer(SERVER_ID, QWebSocketServer::NonSecureMode);
-        quint16 port = appSettings->Get(NETWORK_PORT).toUInt();
+
+        this->hostAddress = hostAddress;
+        port = appSettings->Get(NETWORK_PORT).toUInt();
 
         bool listening = webSocket->listen(hostAddress, port);
 
         if (listening)
         {
             qDebug() << "Server is now listening on" << hostAddress << ":" << port;
-
             connect(webSocket, &QWebSocketServer::newConnection, server, [=]() { server->onNewConnection(connector); });
-            connect(webSocket, &QWebSocketServer::closed, server, &Server::onClosed);
-
-            server->changeConnectionStatus(connector, true, tr("Waiting for your mobile device at %1:%2").arg(hostAddress.toString()).arg(port));
         }
         else
         {
             QString errorString = webSocket->errorString();
             qDebug() << "Failed to start server on" << hostAddress << ":" << port << "(" << errorString << ")";
 
-            server->changeConnectionStatus(connector, false, errorString);
             server->showError(tr("Listener error"), tr("Failed to start listener (ID: %1)!\nPlease check if no other program is currently listening on your current communication port!\n\nSystem returned this error: %2").arg(QString::number(connector), errorString));
         }
 

@@ -19,6 +19,11 @@ void BluetoothListener::start()
     pollTimer = new QTimer();
     connect(pollTimer, &QTimer::timeout, this, &BluetoothListener::btPoll);
     pollTimer->start(appSettings->Get(SUPPORT_BT_CHECK_INTERVAL).toUInt());
+
+    Server* server = &Server::getInstance();
+
+    rfcommServer = new QBluetoothServer(QBluetoothServiceInfo::RfcommProtocol);
+    connect(rfcommServer, &QBluetoothServer::newConnection, this, [=](){ server->onNewConnection(Server::BLUETOOTH); });
 }
 
 void BluetoothListener::stop()
@@ -26,6 +31,8 @@ void BluetoothListener::stop()
     if (pollTimer->isActive()) {
         pollTimer->stop();
         pollFuture.cancel();
+        rfcommServer->close();
+        bluetoothInitialized = false;
     }
 }
 
@@ -43,11 +50,6 @@ void BluetoothListener::btPoll()
 
 void BluetoothListener::initBT()
 {
-    Server* server = &Server::getInstance();
-
-    rfcommServer = new QBluetoothServer(QBluetoothServiceInfo::RfcommProtocol);
-    connect(rfcommServer, &QBluetoothServer::newConnection, this, [=](){ server->onNewConnection(Server::BLUETOOTH); });
-
     QBluetoothAddress localAdapter = QBluetoothAddress();
     bool result = rfcommServer->listen(localAdapter);
 
