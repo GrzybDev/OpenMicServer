@@ -17,6 +17,11 @@ OpenMic::OpenMic(QObject *parent)
 
 void OpenMic::RestartServer()
 {
+    Server* server = & Server::getInstance();
+
+    if (server->connectedClient)
+        server->serverDisconnect(SERVER_RESTARTING);
+
     foreach (auto listener, listeners)
     {
         emit listener->StopListener();
