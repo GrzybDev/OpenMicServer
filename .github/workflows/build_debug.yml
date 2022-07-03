@@ -99,18 +99,21 @@ jobs:
         modules: 'qtwebsockets qtmultimedia qtconnectivity'
         version: 6.2.4
 
-    # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
-        config-file: ./.github/codeql/codeql-config.yml
+        queries: security-and-quality
         languages: "cpp"
+        source-root: src
 
     - name: Build
       shell: cmd
       run: |
         qmake CONFIG+=debug
         nmake
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
 
     - name: Deploy debug version
       shell: cmd
@@ -124,23 +127,3 @@ jobs:
       with:
         name: WindowsBuild
         path: out
-
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
-      with:
-        upload: false # disable the upload here - we will upload in a different action
-        output: sarif-results
-
-    - name: Filter auto-generated debug files from CodeQL Analysis Results
-      uses: zbazztian/filter-sarif@master
-      with:
-        patterns: |
-          -debug/*
-          -ui_*
-        input: sarif-results/cpp.sarif
-        output: sarif-results/cpp.sarif
-
-    - name: Upload CodeQL Analysis Results
-      uses: github/codeql-action/upload-sarif@v2
-      with:
-        sarif_file: sarif-results/cpp.sarif
