@@ -3,16 +3,15 @@
 #include "../openmic.h"
 
 WifiListener::WifiListener(QObject *parent)
-    : QObject{parent}
+    : Listener{parent}
 {
-    appSettings = & Settings::getInstance();
-
-    connect(this, SIGNAL(stopListener()), SLOT(stop()));
+    connect(this, SIGNAL(StartListener()), SLOT(start()));
+    connect(this, SIGNAL(StopListener()), SLOT(stop()));
 }
 
 WifiListener::~WifiListener()
 {
-    stop();
+    emit StopListener();
 }
 
 void WifiListener::start()
@@ -66,9 +65,7 @@ void WifiListener::initWiFi()
         return;
     }
 
-    OpenMic* omic = &OpenMic::getInstance();
-
-    if (omic->StartWebSocketServer(ifaceAddresses.first(), Server::WIFI)) {
+    if (startWebSocket(ifaceAddresses.first(), Server::WIFI)) {
         QStringList broadcastDataList;
         broadcastDataList.append(QCoreApplication::applicationName());
         broadcastDataList.append(QCoreApplication::applicationVersion());

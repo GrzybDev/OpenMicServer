@@ -6,24 +6,28 @@
 #include "../settings.h"
 #include <QtConcurrent/QtConcurrent>
 #include <QUdpSocket>
+#include "listener.h"
 
-class WifiListener : public QObject
+class WifiListener : public Listener
 {
     Q_OBJECT
+    Q_INTERFACES(Listener)
 public:
     explicit WifiListener(QObject *parent = nullptr);
     ~WifiListener();
 
-    void start();
+    WifiListener(const WifiListener&) {}
 
-public slots:
-    void stop();
+    static WifiListener & getInstance() {
+        static WifiListener * _instance = nullptr;
 
-signals:
-    void stopListener();
+        if ( _instance == nullptr )
+            _instance = new WifiListener();
+
+        return *_instance;
+    }
 
 private:
-    Settings* appSettings;
     QTimer* pollTimer = new QTimer();
 
     QUdpSocket *broadcastSocket = new QUdpSocket();
@@ -39,6 +43,9 @@ private:
     void initWiFi();
 
 private slots:
+    void start() override;
+    void stop() override;
+
     void wifiPoll();
 };
 
