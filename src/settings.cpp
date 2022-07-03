@@ -138,7 +138,7 @@ QString Settings::getDefaultNetworkAdapter()
 {
     QList<QNetworkInterface> ifaces = QNetworkInterface::allInterfaces();
 
-    // Return "first" valid network interface (valid = Up and not Loopback)
+    // Return first "valid" network interface (valid = Up and not Loopback)
     foreach (QNetworkInterface interface, ifaces)
     {
         if (interface.flags().testFlag(QNetworkInterface::IsUp) && !interface.flags().testFlag(QNetworkInterface::IsLoopBack))
