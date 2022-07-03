@@ -4,6 +4,7 @@
 #include <QMovie>
 #include <QMessageBox>
 #include <QPainter>
+#include <QAction>
 
 #include "../SettingsAudio/settingsaudio.h"
 #include "../SettingsDevices/settingsdevices.h"
@@ -17,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     initStatus();
+    initTrayIcon();
 
     openmic->RestartServer();
 }
@@ -46,6 +48,35 @@ void MainWindow::initStatus()
 
     connect(openmic, &OpenMic::changeConnectionStatus, this, &MainWindow::changeStatus);
     connect(openmic, &OpenMic::showError, this, [=](QString errorTitle, QString errorText){ this->showError(errorTitle, errorText); });
+}
+
+void MainWindow::initTrayIcon()
+{
+    QAction *hideAction = new QAction("Show/Hide", trayIco);
+    connect(hideAction, SIGNAL(triggered()), this, SLOT(toggleVisibility()));
+
+    QAction *exitAction = new QAction("Exit", trayIco);
+    connect(exitAction, SIGNAL(triggered()), this, SLOT(appExit()));
+
+    QMenu *trayIcoMenu = new QMenu;
+    trayIcoMenu->addAction(hideAction);
+    trayIcoMenu->addAction(exitAction);
+    trayIco->setContextMenu(trayIcoMenu);
+    trayIco->show();
+}
+
+void MainWindow::toggleVisibility()
+{
+    if (isVisible())
+        hide();
+    else
+        show();
+}
+
+void MainWindow::appExit()
+{
+    trayIco->hide();
+    close();
 }
 
 void MainWindow::showError(QString errorTitle, QString errorText)
@@ -100,6 +131,8 @@ void MainWindow::on_actionAudio_triggered()
 {
     SettingsAudio settingsAudio;
     settingsAudio.exec();
+
+    openmic->RestartServer();
 }
 
 
@@ -107,6 +140,8 @@ void MainWindow::on_actionNetwork_triggered()
 {
     SettingsNetwork settingsNetwork;
     settingsNetwork.exec();
+
+    openmic->RestartServer();
 }
 
 
@@ -114,6 +149,8 @@ void MainWindow::on_actionDevices_triggered()
 {
     SettingsDevices settingsDevices;
     settingsDevices.exec();
+
+    openmic->RestartServer();
 }
 
 
@@ -121,5 +158,13 @@ void MainWindow::on_actionSystem_triggered()
 {
     SettingsSystem settingsSystem;
     settingsSystem.exec();
+
+    openmic->RestartServer();
+}
+
+
+void MainWindow::on_actionExit_triggered()
+{
+    appExit();
 }
 
