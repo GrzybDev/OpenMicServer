@@ -2,8 +2,8 @@
 #define DEVICEPICKDIALOG_H
 
 #include <QDialog>
-#include "../../utils.h"
-#include "../../settings.h"
+#include "../../utils.hpp"
+#include "../../settings.hpp"
 
 namespace Ui {
 class DevicePickDialog;

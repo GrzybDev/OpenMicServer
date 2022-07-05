@@ -1,5 +1,5 @@
-#include "handler.h"
-#include "../utils.h"
+#include "handler.hpp"
+#include "../utils.hpp"
 #include <QJsonDocument>
 #include <QMessageBox>
 

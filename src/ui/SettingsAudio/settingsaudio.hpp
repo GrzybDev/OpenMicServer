@@ -2,7 +2,7 @@
 #define SETTINGSAUDIO_H
 
 #include <QDialog>
-#include "../../settings.h"
+#include "../../settings.hpp"
 #include <QAbstractButton>
 
 namespace Ui {

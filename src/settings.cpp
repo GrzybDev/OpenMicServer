@@ -1,8 +1,8 @@
-#include "settings.h"
+#include "settings.hpp"
 
 #include <QIntValidator>
 #include <QMessageBox>
-#include "utils.h"
+#include "utils.hpp"
 #include <QUuid>
 #include <QCoreApplication>
 #include <QMediaDevices>

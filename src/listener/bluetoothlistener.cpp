@@ -1,6 +1,6 @@
-#include "bluetoothlistener.h"
+#include "bluetoothlistener.hpp"
 
-#include "../openmic.h"
+#include "../openmic.hpp"
 
 BluetoothListener::BluetoothListener(QObject *parent)
     : Listener{parent}

@@ -3,16 +3,16 @@
 
 #include <QObject>
 #include <QWebSocketServer>
-#include "settings.h"
-#include "net/server.h"
+#include "settings.hpp"
+#include "net/server.hpp"
 #include <QUdpSocket>
 #include <QBluetoothServer>
-#include "utils.h"
-#include "ui/DialogDevicePick/devicepickdialog.h"
+#include "utils.hpp"
+#include "ui/DialogDevicePick/devicepickdialog.hpp"
 #include <QtConcurrent/QtConcurrent>
-#include "listener/usblistener.h"
-#include "listener/wifilistener.h"
-#include "listener/bluetoothlistener.h"
+#include "listener/usblistener.hpp"
+#include "listener/wifilistener.hpp"
+#include "listener/bluetoothlistener.hpp"
 
 class OpenMic : public QObject
 {

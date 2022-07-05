@@ -1,6 +1,6 @@
-#include "usblistener.h"
+#include "usblistener.hpp"
 
-#include "../openmic.h"
+#include "../openmic.hpp"
 
 USBListener::USBListener(QObject *parent)
     : Listener{parent}

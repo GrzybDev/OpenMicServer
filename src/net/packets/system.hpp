@@ -2,8 +2,8 @@
 #define SYSTEM_H
 
 #include <QObject>
-#include "../packet.h"
-#include "../../settings.h"
+#include "../packet.hpp"
+#include "../../settings.hpp"
 #include <QDialog>
 
 class PacketSystem : public Packet

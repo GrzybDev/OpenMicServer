@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QJsonObject>
 
-#include "message.h"
+#include "message.hpp"
 
 class Packet : public QObject
 {

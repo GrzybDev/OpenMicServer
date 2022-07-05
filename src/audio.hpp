@@ -2,7 +2,7 @@
 #define AUDIO_H
 
 #include <QObject>
-#include "settings.h"
+#include "settings.hpp"
 
 #include <QAudioSink>
 

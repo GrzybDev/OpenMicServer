@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 
 #include <QMovie>
@@ -6,10 +6,10 @@
 #include <QPainter>
 #include <QAction>
 
-#include "../SettingsAudio/settingsaudio.h"
-#include "../SettingsDevices/settingsdevices.h"
-#include "../SettingsNetwork/settingsnetwork.h"
-#include "../SettingsSystem/settingssystem.h"
+#include "../SettingsAudio/settingsaudio.hpp"
+#include "../SettingsDevices/settingsdevices.hpp"
+#include "../SettingsNetwork/settingsnetwork.hpp"
+#include "../SettingsSystem/settingssystem.hpp"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)

@@ -32,28 +32,28 @@ SOURCES += \
     src/utils.cpp
 
 HEADERS += \
-    src/audio.h \
-    src/listener/bluetoothlistener.h \
-    src/listener/listener.h \
-    src/listener/usblistener.h \
-    src/listener/wifilistener.h \
-    src/net/exitcode.h \
-    src/net/handler.h \
-    src/net/message.h \
-    src/net/packets/auth.h \
-    src/net/packets/system.h \
-    src/net/packet.h \
-    src/net/server.h \
-    src/openmic.h \
-    src/settings.h \
-    src/ui/DialogDeviceAuth/deviceauthdialog.h \
-    src/ui/DialogDevicePick/devicepickdialog.h \
-    src/ui/SettingsAudio/settingsaudio.h \
-    src/ui/SettingsDevices/settingsdevices.h \
-    src/ui/SettingsNetwork/settingsnetwork.h \
-    src/ui/SettingsSystem/settingssystem.h \
-    src/ui/WindowMain/mainwindow.h \
-    src/utils.h
+    src/audio.hpp \
+    src/listener/bluetoothlistener.hpp \
+    src/listener/listener.hpp \
+    src/listener/usblistener.hpp \
+    src/listener/wifilistener.hpp \
+    src/net/exitcode.hpp \
+    src/net/handler.hpp \
+    src/net/message.hpp \
+    src/net/packet.hpp \
+    src/net/packets/auth.hpp \
+    src/net/packets/system.hpp \
+    src/net/server.hpp \
+    src/openmic.hpp \
+    src/settings.hpp \
+    src/ui/DialogDeviceAuth/deviceauthdialog.hpp \
+    src/ui/DialogDevicePick/devicepickdialog.hpp \
+    src/ui/SettingsAudio/settingsaudio.hpp \
+    src/ui/SettingsDevices/settingsdevices.hpp \
+    src/ui/SettingsNetwork/settingsnetwork.hpp \
+    src/ui/SettingsSystem/settingssystem.hpp \
+    src/ui/WindowMain/mainwindow.hpp \
+    src/utils.hpp
 
 FORMS += \
     src/ui/DialogDeviceAuth/deviceauthdialog.ui \

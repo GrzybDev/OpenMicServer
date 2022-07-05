@@ -1,4 +1,4 @@
-#include "settingssystem.h"
+#include "settingssystem.hpp"
 #include "ui_settingssystem.h"
 
 SettingsSystem::SettingsSystem(QWidget *parent) :

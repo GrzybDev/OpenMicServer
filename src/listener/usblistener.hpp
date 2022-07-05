@@ -4,10 +4,10 @@
 #include <QObject>
 #include <QThread>
 #include <QTimer>
-#include "../settings.h"
-#include "../ui/DialogDevicePick/devicepickdialog.h"
+#include "../settings.hpp"
+#include "../ui/DialogDevicePick/devicepickdialog.hpp"
 #include <QtConcurrent/QtConcurrent>
-#include "listener.h"
+#include "listener.hpp"
 
 class USBListener : public Listener
 {

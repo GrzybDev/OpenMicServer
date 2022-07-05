@@ -3,10 +3,10 @@
 
 #include <QObject>
 #include <QTimer>
-#include "../settings.h"
+#include "../settings.hpp"
 #include <QtConcurrent/QtConcurrent>
 #include <QUdpSocket>
-#include "listener.h"
+#include "listener.hpp"
 
 class WifiListener : public Listener
 {

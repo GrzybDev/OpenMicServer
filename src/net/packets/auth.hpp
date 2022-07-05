@@ -2,7 +2,7 @@
 #define PACKETAUTH_H
 
 #include <QObject>
-#include "../packet.h"
+#include "../packet.hpp"
 
 class PacketAuth : public Packet
 {

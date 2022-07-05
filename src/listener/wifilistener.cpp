@@ -1,6 +1,6 @@
-#include "wifilistener.h"
+#include "wifilistener.hpp"
 
-#include "../openmic.h"
+#include "../openmic.hpp"
 
 WifiListener::WifiListener(QObject *parent)
     : Listener{parent}

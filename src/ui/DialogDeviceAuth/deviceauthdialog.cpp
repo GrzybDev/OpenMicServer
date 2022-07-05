@@ -1,8 +1,8 @@
-#include "deviceauthdialog.h"
+#include "deviceauthdialog.hpp"
 #include "ui_deviceauthdialog.h"
 
 #include <QRandomGenerator>
-#include "../../net/exitcode.h"
+#include "../../net/exitcode.hpp"
 
 DeviceAuthDialog::DeviceAuthDialog(QWidget *parent) :
     QDialog(parent),

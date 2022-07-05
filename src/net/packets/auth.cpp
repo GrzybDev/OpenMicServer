@@ -1,7 +1,7 @@
-#include "auth.h"
+#include "auth.hpp"
 
-#include "../server.h"
-#include "../../ui/DialogDeviceAuth/deviceauthdialog.h"
+#include "../server.hpp"
+#include "../../ui/DialogDeviceAuth/deviceauthdialog.hpp"
 
 PacketAuth::PacketAuth(QObject *parent)
     : Packet{parent}

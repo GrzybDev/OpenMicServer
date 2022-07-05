@@ -1,12 +1,12 @@
-#include "server.h"
+#include "server.hpp"
 
 #include <QWebSocket>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QBluetoothSocket>
-#include "../listener/bluetoothlistener.h"
+#include "../listener/bluetoothlistener.hpp"
 
-#include "../openmic.h"
+#include "../openmic.hpp"
 
 Server::Server(QObject *parent)
     : QObject{parent}

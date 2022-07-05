@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QSystemTrayIcon>
-#include "../../openmic.h"
+#include "../../openmic.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

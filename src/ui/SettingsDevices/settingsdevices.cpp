@@ -1,4 +1,4 @@
-#include "settingsdevices.h"
+#include "settingsdevices.hpp"
 #include "ui_settingsdevices.h"
 
 SettingsDevices::SettingsDevices(QWidget *parent) :

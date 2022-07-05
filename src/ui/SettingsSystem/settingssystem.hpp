@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include <QAbstractButton>
-#include "../../settings.h"
+#include "../../settings.hpp"
 
 namespace Ui {
 class SettingsSystem;

@@ -1,10 +1,10 @@
-#include "system.h"
+#include "system.hpp"
 
 #include <QCoreApplication>
-#include "../handler.h"
+#include "../handler.hpp"
 #include <QSysInfo>
-#include "../exitcode.h"
-#include "../../ui/DialogDeviceAuth/deviceauthdialog.h"
+#include "../exitcode.hpp"
+#include "../../ui/DialogDeviceAuth/deviceauthdialog.hpp"
 
 PacketSystem::PacketSystem(QObject *parent)
     : Packet{parent}

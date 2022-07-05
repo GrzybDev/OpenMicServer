@@ -2,7 +2,7 @@
 #define DEVICEAUTHDIALOG_H
 
 #include <QDialog>
-#include "../../net/server.h"
+#include "../../net/server.hpp"
 
 #define PAIR_NUM_MIN 1000
 #define PAIR_NUM_MAX 999999

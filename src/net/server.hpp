@@ -4,9 +4,9 @@
 #include <QObject>
 #include <QWebSocketServer>
 #include <QTimer>
-#include "handler.h"
-#include "exitcode.h"
-#include "../audio.h"
+#include "handler.hpp"
+#include "exitcode.hpp"
+#include "../audio.hpp"
 
 class Server : public QObject
 {

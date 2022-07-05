@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QHostAddress>
-#include "../net/server.h"
+#include "../net/server.hpp"
 
 class Listener : public QObject
 {

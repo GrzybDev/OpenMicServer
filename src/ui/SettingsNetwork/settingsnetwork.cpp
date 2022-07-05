@@ -1,4 +1,4 @@
-#include "settingsnetwork.h"
+#include "settingsnetwork.hpp"
 #include "ui_settingsnetwork.h"
 
 SettingsNetwork::SettingsNetwork(QWidget *parent) :

@@ -4,9 +4,9 @@
 #include <QObject>
 #include <QJsonObject>
 
-#include "packets/system.h"
-#include "packets/auth.h"
-#include "./message.h"
+#include "packets/system.hpp"
+#include "packets/auth.hpp"
+#include "./message.hpp"
 
 class Handler : public QObject
 {

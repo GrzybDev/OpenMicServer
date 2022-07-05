@@ -1,4 +1,4 @@
-#include "devicepickdialog.h"
+#include "devicepickdialog.hpp"
 #include "ui_devicepickdialog.h"
 
 #include <QPushButton>
