@@ -23,7 +23,6 @@
 #define SUPPORT_WIFI_BROADCAST_INTERVAL "support/wifiInterval"
 #define SUPPORT_BT "support/bluetooth"
 #define SUPPORT_BT_CHECK_INTERVAL "support/bluetoothInterval"
-#define USB_AUTO_CONNECT "autoConnectUSB"
 #define SYSTEM_START_MINIMIZED "startMinimized"
 #define SYSTEM_MINIMIZE_ON_CONNECT "minimizeOnConnect"
 

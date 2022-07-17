@@ -23,8 +23,6 @@ Settings::Settings(QObject *parent)
 
     qDebug() << "Device ID:" << Get(DEVICE_ID).toString();
     validateCommunicationPort();
-
-    Reset(USB_AUTO_CONNECT);
 }
 
 QVariant Settings::Get(QString key)
