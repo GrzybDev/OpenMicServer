@@ -39,6 +39,8 @@ public:
 signals:
     void changeConnectionStatus(Server::CONNECTOR connector, bool isEnabled, QString statusText);
     void showError(QString errorTitle, QString errorText);
+    void connected();
+    void disconnected();
 
 private:
     Settings* appSettings;
