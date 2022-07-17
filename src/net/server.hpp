@@ -46,7 +46,6 @@ public:
 
 signals:
     void onMessageSent();
-    void onDisconnected();
 
 public slots:
     void onNewConnection(Server::CONNECTOR connector);
