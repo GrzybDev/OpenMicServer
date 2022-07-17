@@ -26,9 +26,6 @@ void USBListener::stop()
 
 void USBListener::start()
 {
-    OpenMic* omic = &OpenMic::getInstance();
-    connect(this, &USBListener::updateDeviceList, omic->devicePickDialog, &DevicePickDialog::updateDeviceList);
-
     pollTimer = new QTimer();
     connect(pollTimer, &QTimer::timeout, this, &USBListener::usbCheck);
     pollTimer->start(appSettings->Get(SUPPORT_USB_POLL_INTERVAL).toUInt());
@@ -106,32 +103,27 @@ void USBListener::usbCheck()
             }
 
             if (devices.size() > 1) {
-                // More than one device connected, either pick previously selected or show select screen
-                QString previousDeviceID = appSettings->Get(USB_AUTO_CONNECT).toString();
+                QTimer* timer = new QTimer();
+                timer->moveToThread(qApp->thread());
+                timer->setSingleShot(true);
 
-                if (deviceIDs.contains(previousDeviceID)) {
-                    foreach (auto device, devices)
-                    {
-                        if (device.first == previousDeviceID)
-                        {
-                            if (device.second != Utils::ONLINE)
-                            {
-                                qWarning() << "Temporarily skipping" << device.first << "because it's not in valid state!";
-                                return;
-                            }
-                        }
+                QObject::connect(timer, &QTimer::timeout, this, [=]()
+                {
+                    // main thread
+                    if (!usbSetupActive) {
+                        DevicePickDialog* devicePickDialog = &DevicePickDialog::getInstance();
+                        devicePickDialog->showDialog();
                     }
 
-                    usbPrepare(previousDeviceID);
-                } else {
-                    OpenMic* omic = &OpenMic::getInstance();
-                    omic->devicePickDialog->show();
-                }
+                    timer->deleteLater();
+                });
+
+                QMetaObject::invokeMethod(timer, "start", Qt::QueuedConnection, Q_ARG(int, 0));
             } else if (devices.size() == 1) {
                 auto device = devices.first();
 
                 if (device.second == Utils::ONLINE) {
-                    usbPrepare(device.first);
+                    usbSetup(device.first);
                 } else {
                     qDebug() << "Skipping" << device.first << "because device is in invalid state!";
                 }
@@ -142,7 +134,6 @@ void USBListener::usbCheck()
 
 QStringList USBListener::getDevices()
 {
-
     QProcess* adb = new QProcess();
 
     QString program = "adb";
@@ -210,8 +201,10 @@ QPair<QList<QPair<QString, Utils::ADB_DEVICE_STATUS>>, QStringList> USBListener:
     return QPair<QList<QPair<QString, Utils::ADB_DEVICE_STATUS>>, QStringList>(devices, deviceIDs);
 }
 
-void USBListener::usbPrepare(QString deviceID)
+void USBListener::usbSetup(QString deviceID)
 {
+    usbSetupActive = false;
+
     QProcess* adb = new QProcess();
 
     QString program = "adb";
@@ -235,4 +228,6 @@ void USBListener::usbPrepare(QString deviceID)
         qDebug() << "Successfully set up port forwarding for device" << deviceID;
         selectedUSBDevice = deviceID;
     }
+
+    usbSetupActive = true;
 }

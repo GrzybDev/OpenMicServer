@@ -31,7 +31,6 @@ public:
     }
 
     Server* server;
-    DevicePickDialog* devicePickDialog = new DevicePickDialog();
     QMap<Server::CONNECTOR, Listener*> listeners;
 
     void RestartServer();

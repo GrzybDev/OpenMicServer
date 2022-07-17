@@ -28,6 +28,11 @@ public:
         return *_instance;
     }
 
+    QString selectedUSBDevice = "";
+
+public slots:
+    void usbSetup(QString deviceID);
+
 signals:
     void updateDeviceList(QList<QPair<QString, Utils::ADB_DEVICE_STATUS>> deviceList);
 
@@ -35,11 +40,10 @@ private:
     QFuture<void> pollFuture;
     QTimer* pollTimer = new QTimer(this);
 
-    QString selectedUSBDevice = "";
     bool usbInitialized = false;
+    bool usbSetupActive = false;
 
     void initADB();
-    void usbPrepare(QString deviceID);
 
     QStringList getDevices();
     QPair<QList<QPair<QString, Utils::ADB_DEVICE_STATUS>>, QStringList> parseDeviceList(QStringList list);
