@@ -3,6 +3,7 @@
 
 #include <QRandomGenerator>
 #include "../../net/exitcode.hpp"
+#include "../../openmic.hpp"
 
 DeviceAuthDialog::DeviceAuthDialog(QWidget *parent) :
     QDialog(parent),
@@ -13,7 +14,9 @@ DeviceAuthDialog::DeviceAuthDialog(QWidget *parent) :
 
     connect(this, SIGNAL(rejected()), SLOT(onReject()));
     connect(server->handler, SIGNAL(onAuthCodeReceived(int)), this, SLOT(onAuthCodeReceived(int)));
-    connect(server, &Server::onDisconnected, this, [=](){ reject(); });
+
+    OpenMic* omic = &OpenMic::getInstance();
+    connect(omic, &OpenMic::disconnected, this, [=](){ reject(); });
 }
 
 DeviceAuthDialog::~DeviceAuthDialog()
