@@ -22,6 +22,8 @@ private slots:
 
     void on_buttonBox_clicked(QAbstractButton *button);
 
+    void on_usbSelected_clicked();
+
 private:
     Ui::SettingsDevices *ui;
     Settings* appSettings;

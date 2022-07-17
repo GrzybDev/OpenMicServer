@@ -1,6 +1,8 @@
 #include "settingsdevices.hpp"
 #include "ui_settingsdevices.h"
 
+#include "../../listener/usblistener.hpp"
+
 SettingsDevices::SettingsDevices(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SettingsDevices)
@@ -42,3 +44,9 @@ void SettingsDevices::on_buttonBox_clicked(QAbstractButton *button)
     }
 }
 
+
+void SettingsDevices::on_usbSelected_clicked()
+{
+    USBListener* listener = &USBListener::getInstance();
+    listener->selectedUSBDevice = "";
+}
