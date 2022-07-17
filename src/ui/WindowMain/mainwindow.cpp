@@ -5,11 +5,14 @@
 #include <QMessageBox>
 #include <QPainter>
 #include <QAction>
+#include <QDesktopServices>
+#include <QUrl>
 
 #include "../SettingsAudio/settingsaudio.hpp"
 #include "../SettingsDevices/settingsdevices.hpp"
 #include "../SettingsNetwork/settingsnetwork.hpp"
 #include "../SettingsSystem/settingssystem.hpp"
+#include "../WindowAbout/aboutwindow.hpp"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -21,6 +24,15 @@ MainWindow::MainWindow(QWidget *parent)
     initTrayIcon();
 
     openmic->RestartServer();
+
+    connect(openmic, &OpenMic::connected, this, &MainWindow::onConnected);
+    connect(openmic, &OpenMic::disconnected, this, &MainWindow::onDisconnect);
+
+#ifdef Q_OS_WIN
+    QAction *vbcableDonate = new QAction(tr("...to VB-Cable Authors"));
+    connect(vbcableDonate, SIGNAL(triggered()), this, SLOT(on_action_to_VBCable_authors_triggered()));
+    ui->menuDonate->addAction(vbcableDonate);
+#endif
 }
 
 MainWindow::~MainWindow()
@@ -75,6 +87,21 @@ void MainWindow::toggleVisibility()
 
 void MainWindow::appExit()
 {
+    Server* srv = &Server::getInstance();
+
+    if (srv->connectedClient)
+    {
+        QMessageBox msgBox;
+        msgBox.setWindowTitle(tr("Exit from OpenMic"));
+        msgBox.setText(tr("You are currently connected to client, if you close OpenMic client will lose connection to server.\nDo you really want to exit OpenMic?"));
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        msgBox.setEscapeButton(QMessageBox::No);
+        msgBox.setDefaultButton(QMessageBox::Yes);
+
+        if (msgBox.exec() == QMessageBox::No)
+            return;
+    }
+
     trayIco->hide();
     close();
 }
@@ -164,7 +191,47 @@ void MainWindow::on_actionSystem_triggered()
 
 
 void MainWindow::on_actionExit_triggered()
-{
+{    
     appExit();
 }
 
+void MainWindow::onConnected()
+{
+    ui->actionDisconnect->setEnabled(true);
+}
+
+void MainWindow::onDisconnect()
+{
+    ui->actionDisconnect->setEnabled(false);
+}
+
+void MainWindow::on_actionDisconnect_triggered()
+{
+    openmic->RestartServer();
+}
+
+void MainWindow::on_actionFAQ_triggered()
+{
+    QDesktopServices::openUrl(QUrl("https://openmic.grzyb.dev/faq"));
+}
+
+void MainWindow::on_actionTutorial_triggered()
+{
+    QDesktopServices::openUrl(QUrl("https://openmic.grzyb.dev/tutorial"));
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+    AboutWindow win;
+    win.exec();
+}
+
+void MainWindow::on_action_to_OpenMic_author_triggered()
+{
+    QDesktopServices::openUrl(QUrl("https://ko-fi.com/grzybdev"));
+}
+
+void MainWindow::on_action_to_VBCable_authors_triggered()
+{
+    QDesktopServices::openUrl(QUrl("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&locale.x=us_XC&lc=US&hosted_button_id=AFR983KFQKK2J"));
+}
