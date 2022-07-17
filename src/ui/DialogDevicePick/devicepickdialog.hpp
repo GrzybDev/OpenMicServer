@@ -17,6 +17,19 @@ public:
     explicit DevicePickDialog(QWidget *parent = nullptr);
     ~DevicePickDialog();
 
+    DevicePickDialog(const DevicePickDialog&): QDialog(nullptr) {}
+
+    static DevicePickDialog & getInstance() {
+        static DevicePickDialog * _instance = nullptr;
+
+        if ( _instance == nullptr )
+            _instance = new DevicePickDialog();
+
+        return *_instance;
+    }
+
+    void showDialog();
+
 public slots:
     void updateDeviceList(QList<QPair<QString, Utils::ADB_DEVICE_STATUS>> deviceList);
 

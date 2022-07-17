@@ -2,6 +2,7 @@
 #include "ui_devicepickdialog.h"
 
 #include <QPushButton>
+#include "../../listener/usblistener.hpp"
 
 DevicePickDialog::DevicePickDialog(QWidget *parent) :
     QDialog(parent),
@@ -13,6 +14,9 @@ DevicePickDialog::DevicePickDialog(QWidget *parent) :
     setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
 
     appSettings = & Settings::getInstance();
+    auto usbList = & USBListener::getInstance();
+
+    connect(usbList, &USBListener::updateDeviceList, this, &DevicePickDialog::updateDeviceList);
 }
 
 DevicePickDialog::~DevicePickDialog()
@@ -22,6 +26,9 @@ DevicePickDialog::~DevicePickDialog()
 
 void DevicePickDialog::updateDeviceList(QList<QPair<QString, Utils::ADB_DEVICE_STATUS>> deviceList)
 {
+    if (deviceList.length() < 2)
+        hide();
+
     for (int i = ui->deviceList->rowCount() - 1; i >= 0; i--)
         ui->deviceList->removeRow(i);
 
@@ -59,7 +66,14 @@ void DevicePickDialog::updateDeviceList(QList<QPair<QString, Utils::ADB_DEVICE_S
 
 void DevicePickDialog::selectDevice(QString deviceID)
 {
-    appSettings->Set(USB_AUTO_CONNECT, deviceID);
+    auto usbList = & USBListener::getInstance();
+    emit usbList->usbSetup(deviceID);
 
     accept();
+}
+
+void DevicePickDialog::showDialog()
+{
+    if (!isVisible())
+        show();
 }
