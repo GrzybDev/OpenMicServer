@@ -28,6 +28,7 @@ SOURCES += \
     src/ui/SettingsDevices/settingsdevices.cpp \
     src/ui/SettingsNetwork/settingsnetwork.cpp \
     src/ui/SettingsSystem/settingssystem.cpp \
+    src/ui/WindowAbout/aboutwindow.cpp \
     src/ui/WindowMain/mainwindow.cpp \
     src/utils.cpp
 
@@ -52,6 +53,7 @@ HEADERS += \
     src/ui/SettingsDevices/settingsdevices.hpp \
     src/ui/SettingsNetwork/settingsnetwork.hpp \
     src/ui/SettingsSystem/settingssystem.hpp \
+    src/ui/WindowAbout/aboutwindow.hpp \
     src/ui/WindowMain/mainwindow.hpp \
     src/utils.hpp
 
@@ -62,6 +64,7 @@ FORMS += \
     src/ui/SettingsDevices/settingsdevices.ui \
     src/ui/SettingsNetwork/settingsnetwork.ui \
     src/ui/SettingsSystem/settingssystem.ui \
+    src/ui/WindowAbout/aboutwindow.ui \
     src/ui/WindowMain/mainwindow.ui
 
 TRANSLATIONS += \
