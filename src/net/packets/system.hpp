@@ -23,6 +23,7 @@ private:
 
     QString handleHello(QJsonObject data);
     QString handleGoodbye(QJsonObject data);
+    QString handleIsAlive();
 };
 
 #endif // SYSTEM_H

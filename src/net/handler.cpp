@@ -18,6 +18,7 @@ QString Handler::HandleCommand(QJsonObject msg)
     switch (messageType) {
         case SYSTEM_HELLO:
         case SYSTEM_GOODBYE:
+        case SYSTEM_IS_ALIVE:
             return pSystem->Handle(messageType, msg);
         case AUTH_CODE_VERIFY:
         case AUTH_CLIENT_SIDE:
@@ -34,6 +35,8 @@ MESSAGE Handler::getMessageType(QString type)
             return SYSTEM_HELLO;
         case qConstHash("System_Goodbye"):
             return SYSTEM_GOODBYE;
+        case qConstHash("System_IsAlive"):
+            return SYSTEM_IS_ALIVE;
         case qConstHash("Auth_CodeVerify"):
             return AUTH_CODE_VERIFY;
         case qConstHash("Auth_ClientSide"):
@@ -51,6 +54,9 @@ QString Handler::GetResponse(MESSAGE type, QJsonObject data)
             break;
         case SYSTEM_GOODBYE:
             data["type"] = "System_Goodbye";
+            break;
+        case SYSTEM_IS_ALIVE:
+            data["type"] = "System_IsAlive";
             break;
         case AUTH_CODE_VERIFY:
             data["type"] = "Auth_CodeVerify";

@@ -19,6 +19,8 @@ QString PacketSystem::Handle(MESSAGE type, QJsonObject data)
             return handleHello(data);
         case SYSTEM_GOODBYE:
             return handleGoodbye(data);
+        case SYSTEM_IS_ALIVE:
+            return handleIsAlive();
         default:
             return "";
     }
@@ -89,4 +91,9 @@ QString PacketSystem::handleGoodbye(QJsonObject data)
     server->clientDisconnect();
 
     return "";
+}
+
+QString PacketSystem::handleIsAlive()
+{
+    return Handler::GetResponse(SYSTEM_IS_ALIVE, QJsonObject());
 }
