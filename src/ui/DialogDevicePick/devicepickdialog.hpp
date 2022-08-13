@@ -36,6 +36,7 @@ public slots:
 private:
     Ui::DevicePickDialog *ui;
     Settings* appSettings;
+    QList<QPair<QString, Utils::ADB_DEVICE_STATUS>> lastList;
 
     void selectDevice(QString deviceID);
 };

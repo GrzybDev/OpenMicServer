@@ -60,7 +60,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>More than one Android device is currently connected to this PC, select one to continue</string>
+    <string>Please select Android device you want to use as OpenMic Client</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>

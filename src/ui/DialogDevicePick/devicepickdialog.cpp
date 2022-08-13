@@ -29,6 +29,11 @@ void DevicePickDialog::updateDeviceList(QList<QPair<QString, Utils::ADB_DEVICE_S
     if (deviceList.length() < 2)
         hide();
 
+    if (deviceList == lastList)
+        return;
+
+    lastList = deviceList;
+
     for (int i = ui->deviceList->rowCount() - 1; i >= 0; i--)
         ui->deviceList->removeRow(i);
 
