@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(openmic, &OpenMic::connected, this, &MainWindow::onConnected);
     connect(openmic, &OpenMic::disconnected, this, &MainWindow::onDisconnect);
+    connect(openmic, &OpenMic::usbDeviceUpdate, this, &MainWindow::usbDeviceUpdate);
 
 #ifdef Q_OS_WIN
     QAction *vbcableDonate = new QAction(tr("...to VB-Cable Authors"));
@@ -234,4 +235,15 @@ void MainWindow::on_action_to_OpenMic_author_triggered()
 void MainWindow::on_action_to_VBCable_authors_triggered()
 {
     QDesktopServices::openUrl(QUrl("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&locale.x=us_XC&lc=US&hosted_button_id=AFR983KFQKK2J"));
+}
+
+void MainWindow::on_actionSelect_USB_Device_triggered()
+{
+    DevicePickDialog* devicePickDialog = &DevicePickDialog::getInstance();
+    devicePickDialog->showDialog();
+}
+
+void MainWindow::usbDeviceUpdate(bool isMultiple)
+{
+    ui->actionSelect_USB_Device->setEnabled(isMultiple);
 }

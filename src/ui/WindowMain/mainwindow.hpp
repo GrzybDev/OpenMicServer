@@ -41,6 +41,7 @@ private slots:
     void on_actionAbout_triggered();
     void on_action_to_OpenMic_author_triggered();
     void on_action_to_VBCable_authors_triggered();
+    void on_actionSelect_USB_Device_triggered();
 
 private:
     Ui::MainWindow *ui;
@@ -49,5 +50,6 @@ private:
 
     void initStatus();
     void initTrayIcon();
+    void usbDeviceUpdate(bool isMultiple);
 };
 #endif // MAINWINDOW_H

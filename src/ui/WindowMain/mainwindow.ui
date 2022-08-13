@@ -236,6 +236,7 @@
     <property name="title">
      <string>Connection</string>
     </property>
+    <addaction name="actionSelect_USB_Device"/>
     <addaction name="actionDisconnect"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
@@ -357,6 +358,18 @@
    </property>
    <property name="text">
     <string>Devices</string>
+   </property>
+  </action>
+  <action name="actionSelect_USB_Device">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../res/resources.qrc">
+     <normaloff>:/icons/tap_and_play_FILL0_wght400_GRAD0_opsz48.svg</normaloff>:/icons/tap_and_play_FILL0_wght400_GRAD0_opsz48.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Select USB Device</string>
    </property>
   </action>
  </widget>
