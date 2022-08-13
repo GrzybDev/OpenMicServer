@@ -40,6 +40,7 @@ signals:
     void showError(QString errorTitle, QString errorText);
     void connected();
     void disconnected();
+    void usbDeviceUpdate(bool isMultiple);
 
 private:
     Settings* appSettings;
