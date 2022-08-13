@@ -7,6 +7,7 @@ USBListener::USBListener(QObject *parent)
 {    
     connect(this, SIGNAL(StartListener()), SLOT(start()));
     connect(this, SIGNAL(StopListener()), SLOT(stop()));
+    connect(this, SIGNAL(usbSetup(QString)), SLOT(usbPrepareDevice(QString)));
 }
 
 USBListener::~USBListener()
@@ -92,6 +93,10 @@ void USBListener::usbCheck()
             QList<QPair<QString, Utils::ADB_DEVICE_STATUS>> devices = devOut.first;
             QStringList deviceIDs = devOut.second;
 
+            OpenMic* omic = & OpenMic::getInstance();
+            bool multiDevice = devices.size() > 1;
+            emit omic->usbDeviceUpdate(multiDevice);
+
             emit updateDeviceList(devices);
 
             if (deviceIDs.contains(selectedUSBDevice))
@@ -102,7 +107,7 @@ void USBListener::usbCheck()
                 selectedUSBDevice = "";
             }
 
-            if (devices.size() > 1) {
+            if (multiDevice) {
                 QTimer* timer = new QTimer();
                 timer->moveToThread(qApp->thread());
                 timer->setSingleShot(true);
@@ -123,7 +128,7 @@ void USBListener::usbCheck()
                 auto device = devices.first();
 
                 if (device.second == Utils::ONLINE) {
-                    usbSetup(device.first);
+                    usbPrepareDevice(device.first);
                 } else {
                     qDebug() << "Skipping" << device.first << "because device is in invalid state!";
                 }
@@ -201,23 +206,30 @@ QPair<QList<QPair<QString, Utils::ADB_DEVICE_STATUS>>, QStringList> USBListener:
     return QPair<QList<QPair<QString, Utils::ADB_DEVICE_STATUS>>, QStringList>(devices, deviceIDs);
 }
 
-void USBListener::usbSetup(QString deviceID)
+void USBListener::usbPrepareDevice(QString deviceID)
 {
     usbSetupActive = false;
 
     QProcess* adb = new QProcess();
 
     QString program = "adb";
-    QStringList arguments;
 
     ushort deviceCommunicationPort = appSettings->Get(NETWORK_PORT).toUInt();
     QString reversePort = "tcp:" + QString::number(deviceCommunicationPort);
-    arguments << "reverse" << "--remove" << reversePort;
 
-    adb->start(program, arguments);
-    adb->waitForFinished();
+    QStringList devicesTmp = getDevices();
+    auto devicesListTmp = parseDeviceList(devicesTmp);
 
-    arguments.clear();
+    foreach (QString device, devicesListTmp.second)
+    {
+        QStringList arguments;
+        arguments << "-s" << device << "reverse" << "--remove" << reversePort;
+
+        adb->start(program, arguments);
+        adb->waitForFinished();
+    }
+
+    QStringList arguments;
     arguments << "-s" << deviceID << "reverse" << reversePort << reversePort;
 
     adb->start(program, arguments);

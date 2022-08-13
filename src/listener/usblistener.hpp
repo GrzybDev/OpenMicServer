@@ -30,11 +30,9 @@ public:
 
     QString selectedUSBDevice = "";
 
-public slots:
-    void usbSetup(QString deviceID);
-
 signals:
     void updateDeviceList(QList<QPair<QString, Utils::ADB_DEVICE_STATUS>> deviceList);
+    void usbSetup(QString deviceID);
 
 private:
     QFuture<void> pollFuture;
@@ -53,6 +51,7 @@ private slots:
     void stop() override;
 
     void usbCheck();
+    void usbPrepareDevice(QString deviceID);
 };
 
 #endif // USBLISTENER_H
