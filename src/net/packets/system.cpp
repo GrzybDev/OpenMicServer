@@ -51,21 +51,11 @@ QString PacketSystem::handleHello(QJsonObject data)
         clientValid = true; // Ignore version if not official app
 
     if (clientValid) {
-        QString knownIDsRaw = appSettings->Get(DEVICE_PAIRED).toString();
-        QStringList knownIDs = knownIDsRaw.split(PAIRED_DEVICES_SEPERATOR);
-        bool needAuth = !knownIDs.contains(clientID);
-
         response["serverApp"] = QCoreApplication::applicationName();
         response["serverVersion"] = applicationVersion;
         response["serverOS"] = QSysInfo::kernelType();
         response["serverName"] = QSysInfo::machineHostName();
         response["serverID"] = appSettings->Get(DEVICE_ID).toString();
-        response["needAuth"] = needAuth;
-
-        if (needAuth) {
-            PacketAuth* auth = &PacketAuth::getInstance();
-            auth->handleClientSide(QJsonObject());
-        }
     }
     else
     {
