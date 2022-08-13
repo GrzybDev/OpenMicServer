@@ -43,10 +43,3 @@ void SettingsDevices::on_buttonBox_clicked(QAbstractButton *button)
         appSettings->Set(DEVICE_REQUIRE_PAIRING, ui->requirePairing->isChecked());
     }
 }
-
-
-void SettingsDevices::on_usbSelected_clicked()
-{
-    USBListener* listener = &USBListener::getInstance();
-    listener->selectedUSBDevice = "";
-}
