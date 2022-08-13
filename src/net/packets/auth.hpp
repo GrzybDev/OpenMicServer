@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "../packet.hpp"
+#include "../../settings.hpp"
 
 class PacketAuth : public Packet
 {
@@ -23,9 +24,11 @@ public:
 
     QString Handle(MESSAGE type, QJsonObject data) override;
 
-    QString handleClientSide(QJsonObject data);
+    QString handleAuthClient(QJsonObject data);
 
 private:
+    Settings *appSettings;
+
     QString handleCodeVerify(QJsonObject data);
 };
 

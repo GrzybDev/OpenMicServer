@@ -21,7 +21,7 @@ QString Handler::HandleCommand(QJsonObject msg)
         case SYSTEM_IS_ALIVE:
             return pSystem->Handle(messageType, msg);
         case AUTH_CODE_VERIFY:
-        case AUTH_CLIENT_SIDE:
+        case AUTH_CLIENT:
             return pAuth->Handle(messageType, msg);
         default:
             return "";
@@ -37,10 +37,10 @@ MESSAGE Handler::getMessageType(QString type)
             return SYSTEM_GOODBYE;
         case qConstHash("System_IsAlive"):
             return SYSTEM_IS_ALIVE;
+        case qConstHash("Auth_Client"):
+            return AUTH_CLIENT;
         case qConstHash("Auth_CodeVerify"):
             return AUTH_CODE_VERIFY;
-        case qConstHash("Auth_ClientSide"):
-            return AUTH_CLIENT_SIDE;
         default:
             return UNKNOWN;
     }
@@ -57,6 +57,9 @@ QString Handler::GetResponse(MESSAGE type, QJsonObject data)
             break;
         case SYSTEM_IS_ALIVE:
             data["type"] = "System_IsAlive";
+            break;
+        case AUTH_CLIENT:
+            data["type"] = "Auth_Client";
             break;
         case AUTH_CODE_VERIFY:
             data["type"] = "Auth_CodeVerify";
