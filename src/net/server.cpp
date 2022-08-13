@@ -96,7 +96,7 @@ void Server::processCommand(QString message)
             btSocket->close();
         } else {
             QWebSocket* webSocket = qobject_cast<QWebSocket*>(connectedClient);
-            webSocket->close(QWebSocketProtocol::CloseCodeProtocolError, tr("Invalid text data, disconnecting..."));
+            webSocket->close(QWebSocketProtocol::CloseCodeProtocolError, tr("Server received invalid text data and closed connection as a result"));
         }
     } else {
         QJsonObject jsonObject = jsonCommand.object();
@@ -111,7 +111,7 @@ void Server::processCommand(QString message)
                     btSocket->close();
                 } else {
                     QWebSocket* webSocket = qobject_cast<QWebSocket*>(connectedClient);
-                    webSocket->close(QWebSocketProtocol::CloseCodeBadOperation, tr("No response generated, disconnecting..."));
+                    webSocket->close(QWebSocketProtocol::CloseCodeBadOperation, tr("Server did not recognize command sent by client and closed connection as a result"));
                 }
             }
         } else {
