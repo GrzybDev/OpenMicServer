@@ -18,6 +18,7 @@ SOURCES += \
     src/net/handler.cpp \
     src/net/packet.cpp \
     src/net/packets/auth.cpp \
+    src/net/packets/stream.cpp \
     src/net/packets/system.cpp \
     src/net/server.cpp \
     src/openmic.cpp \
@@ -43,6 +44,7 @@ HEADERS += \
     src/net/message.hpp \
     src/net/packet.hpp \
     src/net/packets/auth.hpp \
+    src/net/packets/stream.hpp \
     src/net/packets/system.hpp \
     src/net/server.hpp \
     src/openmic.hpp \
