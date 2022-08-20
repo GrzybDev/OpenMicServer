@@ -189,17 +189,23 @@ void Server::ping()
     }
 }
 
-void Server::serverDisconnect(EXIT_CODE exitCode, bool waitForMessageSend)
+void Server::serverDisconnect(ERROR_CODE errCode, bool waitForMessageSend)
 {
     if (waitForMessageSend) {
-        connect(this, &Server::onMessageSent, this, [=](){ serverDisconnect(exitCode); });
+        QMetaObject::Connection * const connection = new QMetaObject::Connection;
+        *connection = connect(this, &Server::onMessageSent, this, [=](){
+            serverDisconnect(errCode);
+
+            QObject::disconnect(*connection);
+            delete connection;
+        });
 
         return;
     }
 
     if (isClientConnected) {
         QJsonObject data;
-        data["exitCode"] = exitCode;
+        data["exitCode"] = errCode;
 
         QString packet = Handler::GetResponse(SYSTEM_GOODBYE, data);
         sendMessage(packet);

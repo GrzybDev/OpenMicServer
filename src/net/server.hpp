@@ -5,7 +5,7 @@
 #include <QWebSocketServer>
 #include <QTimer>
 #include "handler.hpp"
-#include "exitcode.hpp"
+#include "errorcode.hpp"
 #include "../audio.hpp"
 
 class Server : public QObject
@@ -36,7 +36,7 @@ public:
 
     void sendMessage(QString message);
 
-    void serverDisconnect(EXIT_CODE exitCode, bool waitForMessageSend = false);
+    void serverDisconnect(ERROR_CODE errCode, bool waitForMessageSend = false);
     void clientDisconnect();
 
     QString connectedClientID;
