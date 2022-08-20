@@ -38,7 +38,7 @@ HEADERS += \
     src/listener/listener.hpp \
     src/listener/usblistener.hpp \
     src/listener/wifilistener.hpp \
-    src/net/exitcode.hpp \
+    src/net/errorcode.hpp \
     src/net/handler.hpp \
     src/net/message.hpp \
     src/net/packet.hpp \
