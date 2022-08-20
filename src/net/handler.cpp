@@ -3,11 +3,16 @@
 #include <QJsonDocument>
 #include <QMessageBox>
 
+#include "packets/auth.hpp"
+#include "packets/stream.hpp"
+#include "packets/system.hpp"
+
 Handler::Handler(QObject *parent)
     : QObject{parent}
 {
     pSystem = new PacketSystem(this);
     pAuth = new PacketAuth(this);
+    pStream = new PacketStream(this);
 }
 
 QString Handler::HandleCommand(QJsonObject msg)
@@ -23,6 +28,8 @@ QString Handler::HandleCommand(QJsonObject msg)
         case AUTH_CODE_VERIFY:
         case AUTH_CLIENT:
             return pAuth->Handle(messageType, msg);
+        case STREAM_START:
+            return pStream->Handle(messageType, msg);
         default:
             return "";
     }
@@ -41,6 +48,8 @@ MESSAGE Handler::getMessageType(QString type)
             return AUTH_CLIENT;
         case qConstHash("Auth_CodeVerify"):
             return AUTH_CODE_VERIFY;
+        case qConstHash("Stream_Start"):
+            return STREAM_START;
         default:
             return UNKNOWN;
     }
@@ -63,6 +72,9 @@ QString Handler::GetResponse(MESSAGE type, QJsonObject data)
             break;
         case AUTH_CODE_VERIFY:
             data["type"] = "Auth_CodeVerify";
+            break;
+        case STREAM_START:
+            data["type"] = "Stream_Start";
             break;
         default:
             return "";

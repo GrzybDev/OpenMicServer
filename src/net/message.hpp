@@ -9,6 +9,7 @@ enum MESSAGE
     SYSTEM_IS_ALIVE,
     AUTH_CLIENT,
     AUTH_CODE_VERIFY,
+    STREAM_START,
 };
 
 #endif // MESSAGE_H

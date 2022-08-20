@@ -4,9 +4,8 @@
 #include <QObject>
 #include <QJsonObject>
 
-#include "packets/system.hpp"
-#include "packets/auth.hpp"
 #include "./message.hpp"
+#include "./packet.hpp"
 
 class Handler : public QObject
 {
@@ -23,8 +22,9 @@ signals:
 private:
     MESSAGE getMessageType(QString type);
 
-    PacketSystem *pSystem;
-    PacketAuth *pAuth;
+    Packet *pSystem;
+    Packet *pAuth;
+    Packet *pStream;
 };
 
 #endif // HANDLER_H
