@@ -6,6 +6,20 @@
 
 #include <QAudioSink>
 
+enum AUDIO_CHANNELS
+{
+    MONO = 1,
+    STEREO = 2
+};
+
+enum AUDIO_FORMAT
+{
+    PCM_8BIT = 0,
+    PCM_16BIT = 1,
+    PCM_32BIT = 2,
+    PCM_FLOAT = 3
+};
+
 class Audio : public QObject
 {
     Q_OBJECT
@@ -22,7 +36,7 @@ public:
         return *_instance;
     }
 
-    void initialize();
+    void initialize(int sampleRate, QAudioFormat::ChannelConfig channels, QAudioFormat::SampleFormat format);
     void play(QByteArray audioData);
 private:
     Settings* settings;

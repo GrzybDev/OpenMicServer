@@ -5,19 +5,16 @@ Audio::Audio(QObject *parent)
     : QObject{parent}
 {
     settings = &Settings::getInstance();
-
-    initialize();
 }
 
-void Audio::initialize()
+void Audio::initialize(int sampleRate, QAudioFormat::ChannelConfig channels, QAudioFormat::SampleFormat format)
 {
     audioDev = settings->GetAudioDevice();
     audioFormat = QAudioFormat();
 
-    audioFormat.setSampleRate(8000);
-    audioFormat.setSampleFormat(QAudioFormat::Int16);
-    audioFormat.setChannelConfig(QAudioFormat::ChannelConfigMono);
-    audioFormat.setChannelCount(1);
+    audioFormat.setSampleRate(sampleRate);
+    audioFormat.setChannelConfig(channels);
+    audioFormat.setSampleFormat(format);
 
     audioOut = new QAudioSink(audioDev, audioFormat);
     audioIO = audioOut->start();
