@@ -11,6 +11,7 @@
 #define AUDIO_SAMPLE_RATE "audio/sampleRate"
 #define AUDIO_SAMPLE_FORMAT "audio/sampleFormat"
 #define AUDIO_CHANNEL_CONFIG "audio/channelConfig"
+#define AUDIO_FORCE_SERVER_CONFIG "audio/forceServer"
 #define DEVICE_REQUIRE_PAIRING "devices/requirePairing"
 #define DEVICE_PAIRED "devices/paired"
 #define DEVICE_ID "devices/serverID"

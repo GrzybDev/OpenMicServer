@@ -51,6 +51,8 @@ QVariant Settings::GetDefault(QString key)
             QAudioFormat format = dev.preferredFormat();
             return format.channelConfig();
         }
+        case qConstHash(AUDIO_FORCE_SERVER_CONFIG):
+            return false;
         case qConstHash(DEVICE_REQUIRE_PAIRING):
         case qConstHash(SUPPORT_USB):
         case qConstHash(SUPPORT_WIFI):
