@@ -3,8 +3,8 @@
 #include <QCoreApplication>
 #include "../handler.hpp"
 #include <QSysInfo>
-#include "../exitcode.hpp"
-#include "../../ui/DialogDeviceAuth/deviceauthdialog.hpp"
+#include "../errorcode.hpp"
+#include "../server.hpp"
 
 PacketSystem::PacketSystem(QObject *parent)
     : Packet{parent}
@@ -70,7 +70,7 @@ QString PacketSystem::handleHello(QJsonObject data)
 QString PacketSystem::handleGoodbye(QJsonObject data)
 {
     int exitCodeInt = data.value("exitCode").toInt();
-    EXIT_CODE exitCode = static_cast<EXIT_CODE>(exitCodeInt);
+    ERROR_CODE exitCode = static_cast<ERROR_CODE>(exitCodeInt);
 
     if (exitCode == CANCELED_AUTH_CODE_DIALOG)
         dialogDeviceAuth->close();
