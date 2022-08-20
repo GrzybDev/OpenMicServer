@@ -2,7 +2,7 @@
 #include "ui_deviceauthdialog.h"
 
 #include <QRandomGenerator>
-#include "../../net/exitcode.hpp"
+#include "../../net/errorcode.hpp"
 #include "../../openmic.hpp"
 
 DeviceAuthDialog::DeviceAuthDialog(QWidget *parent) :
