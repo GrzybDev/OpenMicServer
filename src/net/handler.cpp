@@ -29,6 +29,7 @@ QString Handler::HandleCommand(QJsonObject msg)
         case AUTH_CLIENT:
             return pAuth->Handle(messageType, msg);
         case STREAM_START:
+        case STREAM_VOLUME:
             return pStream->Handle(messageType, msg);
         default:
             return "";
@@ -50,6 +51,8 @@ MESSAGE Handler::getMessageType(QString type)
             return AUTH_CODE_VERIFY;
         case qConstHash("Stream_Start"):
             return STREAM_START;
+        case qConstHash("Stream_Volume"):
+            return STREAM_VOLUME;
         default:
             return UNKNOWN;
     }
@@ -75,6 +78,9 @@ QString Handler::GetResponse(MESSAGE type, QJsonObject data)
             break;
         case STREAM_START:
             data["type"] = "Stream_Start";
+            break;
+        case STREAM_VOLUME:
+            data["type"] = "Stream_Volume";
             break;
         default:
             return "";

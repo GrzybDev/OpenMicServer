@@ -3,6 +3,7 @@
 
 #include "../../settings.hpp"
 #include "../packet.hpp"
+#include "../../audio.hpp"
 
 class PacketStream : public Packet
 {
@@ -15,8 +16,10 @@ public:
 
 private:
     Settings *appSettings;
+    Audio *audio;
 
     QString handleStart(QJsonObject data);
+    QString handleVolume(QJsonObject data);
 };
 
 #endif // STREAM_H

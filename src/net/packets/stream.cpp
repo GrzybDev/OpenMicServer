@@ -8,6 +8,7 @@
 PacketStream::PacketStream(QObject *parent) : Packet{parent}
 {
     appSettings = & Settings::getInstance();
+    audio = & Audio::getInstance();
 }
 
 QString PacketStream::Handle(MESSAGE type, QJsonObject data)
@@ -15,6 +16,8 @@ QString PacketStream::Handle(MESSAGE type, QJsonObject data)
     switch (type) {
         case STREAM_START:
             return handleStart(data);
+        case STREAM_VOLUME:
+            return handleVolume(data);
         default:
             return "";
     }
@@ -125,4 +128,12 @@ QString PacketStream::handleStart(QJsonObject data)
     }
 
     return Handler::GetResponse(STREAM_START, response);
+}
+
+QString PacketStream::handleVolume(QJsonObject data)
+{
+    int targetVolume = data.value("volume").toInt(0);
+    audio->setVolume(targetVolume);
+
+    return Handler::GetResponse(STREAM_VOLUME, data);
 }

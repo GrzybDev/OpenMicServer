@@ -10,6 +10,7 @@ enum MESSAGE
     AUTH_CLIENT,
     AUTH_CODE_VERIFY,
     STREAM_START,
+    STREAM_VOLUME
 };
 
 #endif // MESSAGE_H
