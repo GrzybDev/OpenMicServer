@@ -24,3 +24,9 @@ void Audio::play(QByteArray audioData)
 {
     audioIO->write(audioData);
 }
+
+void Audio::setVolume(int volume)
+{
+    float realVol = (float)volume / 100;
+    audioOut->setVolume(realVol);
+}

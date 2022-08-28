@@ -38,6 +38,9 @@ public:
 
     void initialize(int sampleRate, QAudioFormat::ChannelConfig channels, QAudioFormat::SampleFormat format);
     void play(QByteArray audioData);
+
+    void setVolume(int volume);
+
 private:
     Settings* settings;
 
