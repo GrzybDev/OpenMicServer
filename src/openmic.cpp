@@ -1,8 +1,6 @@
 #include "openmic.hpp"
 
 #include <QtConcurrent/QtConcurrent>
-#include "utils.hpp"
-#include "ui/DialogDevicePick/devicepickdialog.hpp"
 
 OpenMic::OpenMic(QObject *parent)
     : QObject{parent}
