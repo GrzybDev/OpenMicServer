@@ -24,7 +24,14 @@ void WifiListener::start()
     QList<QHostAddress> ifaceAddresses;
     QList<QNetworkAddressEntry> addrEntries = iface.addressEntries();
     QNetworkAddressEntry addrEntry = addrEntries.first();
-    broadcastAddr = addrEntry.broadcast();
+
+    foreach (auto addrEntry, addrEntries)
+    {
+        auto tempAddr = addrEntry.broadcast();
+
+        if (tempAddr != QHostAddress())
+            broadcastAddr = tempAddr;
+    }
 
     foreach (QNetworkAddressEntry addressEntry, addrEntries)
     {
