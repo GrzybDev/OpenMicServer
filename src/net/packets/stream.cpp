@@ -113,9 +113,6 @@ QString PacketStream::handleStart(QJsonObject data)
         else
             sampleFormat = QAudioFormat::Float;
 
-        qDebug() << serverFormats;
-        qDebug() << sampleFormat;
-
         if (!serverFormats.contains(sampleFormat))
         {
             response["error"] = NOT_ACCEPTABLE_CONFIG;
