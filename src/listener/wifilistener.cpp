@@ -85,7 +85,7 @@ void WifiListener::initWiFi()
         QStringList broadcastDataList;
         broadcastDataList.append(QCoreApplication::applicationName());
         broadcastDataList.append(QCoreApplication::applicationVersion());
-        broadcastDataList.append(QSysInfo::kernelType());
+        broadcastDataList.append(QSysInfo::productType());
         broadcastDataList.append(QSysInfo::machineHostName());
         broadcastDataList.append(appSettings->Get(DEVICE_ID).toString());
 
