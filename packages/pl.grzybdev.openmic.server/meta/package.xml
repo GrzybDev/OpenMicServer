@@ -4,7 +4,7 @@
     <DisplayName xml:lang="pl_PL">Serwer OpenMic</DisplayName>
     <Description>Base application (required)</Description>
     <Description xml:lang="pl">Podstawowa aplikacja (wymagana)</Description>
-    <Version>14</Version>
+    <Version>16</Version>
     <ReleaseDate></ReleaseDate>
     <Licenses>
         <License name="OpenMic Server" file="LICENSE.md" />
