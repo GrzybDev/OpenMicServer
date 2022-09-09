@@ -35,7 +35,7 @@ QVariant Settings::GetDefault(QString key)
     switch (qt_hash(key))
     {
         case qConstHash(AUDIO_DEVICE):
-            return mDevices->defaultAudioOutput().description();
+            return getDefaultAudioDevice();
         case qConstHash(AUDIO_SAMPLE_RATE): {
             QAudioDevice dev = GetAudioDevice();
             QAudioFormat format = dev.preferredFormat();
@@ -197,4 +197,15 @@ void Settings::setAutostart(bool autostart)
         desktopFile.remove();
     }
 #endif
+}
+
+QString Settings::getDefaultAudioDevice()
+{
+    foreach (auto audioOut, mDevices->audioOutputs())
+    {
+        if (audioOut.description().contains("VB-Audio Virtual Cable") || audioOut.description().contains("OpenMic Input"))
+            return audioOut.description();
+    }
+
+    return mDevices->defaultAudioOutput().description();
 }

@@ -70,6 +70,7 @@ private:
 
     void validateCommunicationPort();
     QString getDefaultNetworkAdapter();
+    QString getDefaultAudioDevice();
 };
 
 #endif // SETTINGS_H
