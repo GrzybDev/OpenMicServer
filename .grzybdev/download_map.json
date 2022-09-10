@@ -1,0 +1,11 @@
+{
+  "Linux": {
+    "Installer": "InstallerOpenMicServer.run",
+    "Debian": "OpenMicServer.deb",
+    "Portable": "OpenMicServer.zip",
+  },
+  "Windows": {
+    "Installer": "OpenMicServer_Windows_Setup.exe",
+    "Portable": "OpenMicServer_Windows_Portable.zip"
+  }
+}
