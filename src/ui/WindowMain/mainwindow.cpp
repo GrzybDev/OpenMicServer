@@ -212,7 +212,11 @@ void MainWindow::on_actionExit_triggered()
 void MainWindow::onConnected()
 {
     ui->actionDisconnect->setEnabled(true);
-}
+
+    if (openmic->appSettings->Get(SYSTEM_MINIMIZE_ON_CONNECT).toBool())
+    {
+        hide();
+    }
 
     trayIco->showMessage(tr("Client connected!"),
                          tr("Application now will run in background"),
