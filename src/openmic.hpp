@@ -34,6 +34,7 @@ public:
     QMap<Server::CONNECTOR, Listener*> listeners;
 
     void RestartServer();
+    Settings* appSettings;
 
 signals:
     void changeConnectionStatus(Server::CONNECTOR connector, bool isEnabled, QString statusText);
@@ -41,9 +42,6 @@ signals:
     void connected();
     void disconnected();
     void usbDeviceUpdate(bool isMultiple);
-
-private:
-    Settings* appSettings;
 };
 
 #endif // OPENMIC_H
