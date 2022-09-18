@@ -52,6 +52,7 @@ QVariant Settings::GetDefault(QString key)
             return format.channelConfig();
         }
         case qConstHash(AUDIO_FORCE_SERVER_CONFIG):
+        case qConstHash(SYSTEM_START_MINIMIZED):
             return false;
         case qConstHash(DEVICE_REQUIRE_PAIRING):
         case qConstHash(SUPPORT_USB):

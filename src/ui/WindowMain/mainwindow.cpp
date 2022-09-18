@@ -35,6 +35,18 @@ MainWindow::MainWindow(QWidget *parent)
     connect(vbcableDonate, SIGNAL(triggered()), this, SLOT(on_action_to_VBCable_authors_triggered()));
     ui->menuDonate->addAction(vbcableDonate);
 #endif
+
+    if (openmic->appSettings->Get(SYSTEM_START_MINIMIZED).toBool())
+    {
+        trayIco->showMessage(tr("OpenMic is ready!"),
+                             tr("Server is now waiting for connections!"),
+                             QSystemTrayIcon::Information,
+                             10000);
+    }
+    else
+    {
+        show();
+    }
 }
 
 MainWindow::~MainWindow()
