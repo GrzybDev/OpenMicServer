@@ -214,9 +214,20 @@ void MainWindow::onConnected()
     ui->actionDisconnect->setEnabled(true);
 }
 
+    trayIco->showMessage(tr("Client connected!"),
+                         tr("Application now will run in background"),
+                         QSystemTrayIcon::Information,
+                         10000);
+}
+
 void MainWindow::onDisconnect()
 {
     ui->actionDisconnect->setEnabled(false);
+
+    trayIco->showMessage(tr("Client disconnected!"),
+                         tr("Server still works in background, another client can now connect. Click on this icon to show control panel"),
+                         QSystemTrayIcon::Information,
+                         10000);
 }
 
 void MainWindow::on_actionDisconnect_triggered()
