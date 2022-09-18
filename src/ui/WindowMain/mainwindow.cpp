@@ -78,10 +78,10 @@ void MainWindow::initStatus()
 
 void MainWindow::initTrayIcon()
 {
-    QAction *hideAction = new QAction("Show/Hide", trayIco);
+    QAction *hideAction = new QAction(tr("Show/Hide Control Panel"), trayIco);
     connect(hideAction, SIGNAL(triggered()), this, SLOT(toggleVisibility()));
 
-    QAction *exitAction = new QAction("Exit", trayIco);
+    QAction *exitAction = new QAction(tr("Exit"), trayIco);
     connect(exitAction, SIGNAL(triggered()), this, SLOT(appExit()));
 
     QMenu *trayIcoMenu = new QMenu;
