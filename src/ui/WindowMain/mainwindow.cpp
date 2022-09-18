@@ -29,7 +29,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(openmic, &OpenMic::connected, this, &MainWindow::onConnected);
     connect(openmic, &OpenMic::disconnected, this, &MainWindow::onDisconnect);
     connect(openmic, &OpenMic::usbDeviceUpdate, this, &MainWindow::usbDeviceUpdate);
-    connect(openmic, &OpenMic::onClientConnected, this, &MainWindow::onClientConnected);
 
 #ifdef Q_OS_WIN
     QAction *vbcableDonate = new QAction(tr("...to VB-Cable Authors"));
@@ -248,16 +247,4 @@ void MainWindow::on_actionSelect_USB_Device_triggered()
 void MainWindow::usbDeviceUpdate(bool isMultiple)
 {
     ui->actionSelect_USB_Device->setEnabled(isMultiple);
-}
-
-void MainWindow::onClientConnected()
-{
-    Server* server = & Server::getInstance();
-
-    hide();
-
-    trayIco->showMessage(tr("Connected with %1!").arg(server->connectedClientID),
-                         tr("Application now will run in background"),
-                         QSystemTrayIcon::Information,
-                         10000);
 }

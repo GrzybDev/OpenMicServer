@@ -41,7 +41,6 @@ signals:
     void connected();
     void disconnected();
     void usbDeviceUpdate(bool isMultiple);
-    void onClientConnected();
 
 private:
     Settings* appSettings;

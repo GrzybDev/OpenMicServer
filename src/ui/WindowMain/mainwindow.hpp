@@ -43,8 +43,6 @@ private slots:
     void on_action_to_VBCable_authors_triggered();
     void on_actionSelect_USB_Device_triggered();
 
-    void onClientConnected();
-
 private:
     Ui::MainWindow *ui;
     OpenMic* openmic = &OpenMic::getInstance();

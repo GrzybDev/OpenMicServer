@@ -1,5 +1,4 @@
 #include "audio.hpp"
-#include "openmic.hpp"
 
 
 Audio::Audio(QObject *parent)
@@ -22,9 +21,6 @@ void Audio::initialize(int sampleRate, QAudioFormat::ChannelConfig channels, QAu
 
     audioOut = new QAudioSink(audioDev, audioFormat);
     audioIO = audioOut->start();
-
-    OpenMic* omic = & OpenMic::getInstance();
-    emit omic->onClientConnected();
 }
 
 void Audio::play(QByteArray audioData)
