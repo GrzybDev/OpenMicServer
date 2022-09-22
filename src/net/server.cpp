@@ -153,8 +153,10 @@ void Server::socketDisconnected()
         pingTimer->stop();
     }
 
-    OpenMic* openmic = &OpenMic::getInstance();
-    emit openmic->disconnected();
+    if (!isBroadcast) {
+        OpenMic* openmic = &OpenMic::getInstance();
+        emit openmic->disconnected();
+    }
 }
 
 void Server::sendMessage(QString message)
