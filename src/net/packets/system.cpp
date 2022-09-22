@@ -89,5 +89,8 @@ QString PacketSystem::handleGoodbye(QJsonObject data)
 
 QString PacketSystem::handleIsAlive()
 {
+    Server* srv = &Server::getInstance();
+    srv->isBroadcast = true;
+
     return Handler::GetResponse(SYSTEM_IS_ALIVE, QJsonObject());
 }
