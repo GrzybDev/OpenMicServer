@@ -63,8 +63,6 @@ void Server::onNewConnection(Server::CONNECTOR connector)
         connect(webSocket, &QWebSocket::disconnected, this, &Server::socketDisconnected);
     }
 
-    emit openmic->connected();
-
     Settings* settings = &Settings::getInstance();
     pingTimer->start(settings->Get(NETWORK_PING_INTERVAL).toUInt());
 }

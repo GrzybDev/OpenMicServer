@@ -5,6 +5,7 @@
 #include <QSysInfo>
 #include "../errorcode.hpp"
 #include "../server.hpp"
+#include "../../openmic.hpp"
 
 PacketSystem::PacketSystem(QObject *parent)
     : Packet{parent}
@@ -56,6 +57,9 @@ QString PacketSystem::handleHello(QJsonObject data)
         response["serverOS"] = QSysInfo::kernelType();
         response["serverName"] = QSysInfo::machineHostName();
         response["serverID"] = appSettings->Get(DEVICE_ID).toString();
+
+        OpenMic* openmic = &OpenMic::getInstance();
+        emit openmic->connected();
     }
     else
     {
