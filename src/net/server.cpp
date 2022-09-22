@@ -135,13 +135,14 @@ void Server::processCommand(QString message)
 
 void Server::processAudioData(QByteArray message)
 {
-    // TODO: Allow this only after auth
-    audioHandler->play(message);
+    if (isAuthorized)
+        audioHandler->play(message);
 }
 
 void Server::socketDisconnected()
 {
     qDebug() << "Client disconnected!";
+    isAuthorized = false;
 
     if (connectedClient) {
         isClientConnected = false;
