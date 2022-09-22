@@ -40,6 +40,8 @@ public:
     void clientDisconnect();
 
     QString connectedClientID;
+    bool isBroadcast = false;
+    bool isAuthorized = false;
 
     void changeConnectionStatus(Server::CONNECTOR connector, bool isEnabled, QString statusText);
     void showError(QString errorTitle, QString errorText);
