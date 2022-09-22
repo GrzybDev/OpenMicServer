@@ -228,6 +228,7 @@ System zwrócił ten błąd: %2</translation>
     </message>
     <message>
         <location filename="../ui/WindowMain/mainwindow.ui" line="292"/>
+        <location filename="../ui/WindowMain/mainwindow.cpp" line="84"/>
         <source>Exit</source>
         <translation>Wyjdź</translation>
     </message>
@@ -277,34 +278,59 @@ System zwrócił ten błąd: %2</translation>
         <translation>Wybierz urządzenie USB</translation>
     </message>
     <message>
-        <location filename="../ui/WindowMain/mainwindow.cpp" line="35"/>
+        <location filename="../ui/WindowMain/mainwindow.cpp" line="34"/>
         <source>...to VB-Cable Authors</source>
         <translation>..do autorów VB-Cable</translation>
     </message>
     <message>
-        <location filename="../ui/WindowMain/mainwindow.cpp" line="61"/>
+        <location filename="../ui/WindowMain/mainwindow.cpp" line="41"/>
+        <source>OpenMic is ready!</source>
+        <translation>OpenMic jest gotowy!</translation>
+    </message>
+    <message>
+        <location filename="../ui/WindowMain/mainwindow.cpp" line="42"/>
+        <source>Server is now waiting for connections!</source>
+        <translation>Serwer oczekuje teraz na połączenia!</translation>
+    </message>
+    <message>
+        <location filename="../ui/WindowMain/mainwindow.cpp" line="72"/>
         <source>Initializing, please wait...</source>
         <translation>Inicjowanie, proszę czekać...</translation>
     </message>
     <message>
-        <location filename="../ui/WindowMain/mainwindow.cpp" line="98"/>
+        <location filename="../ui/WindowMain/mainwindow.cpp" line="81"/>
+        <source>Show/Hide Control Panel</source>
+        <translation>Pokaż/Ukryj Panel Sterowania</translation>
+    </message>
+    <message>
+        <location filename="../ui/WindowMain/mainwindow.cpp" line="109"/>
         <source>Exit from OpenMic</source>
         <translation>Wyjdź z OpenMic</translation>
     </message>
     <message>
-        <location filename="../ui/WindowMain/mainwindow.cpp" line="99"/>
+        <location filename="../ui/WindowMain/mainwindow.cpp" line="110"/>
         <source>You are currently connected to client, if you close OpenMic client will lose connection to server.
 Do you really want to exit OpenMic?</source>
         <translation>Obecnie jesteś połączony z klientem, jeżeli zamkniesz serwer to OpenMic Client utraci połączenie.
 Czy na pewno chcesz wyjść z OpenMic?</translation>
     </message>
     <message>
-        <location filename="../ui/WindowMain/mainwindow.cpp" line="259"/>
-        <source>Connected with %1!</source>
-        <translation>Połączono z %1!</translation>
+        <location filename="../ui/WindowMain/mainwindow.cpp" line="221"/>
+        <source>Client connected!</source>
+        <translation>Klient połączony!</translation>
     </message>
     <message>
-        <location filename="../ui/WindowMain/mainwindow.cpp" line="260"/>
+        <location filename="../ui/WindowMain/mainwindow.cpp" line="231"/>
+        <source>Client disconnected!</source>
+        <translation>Klient rozłączony!</translation>
+    </message>
+    <message>
+        <location filename="../ui/WindowMain/mainwindow.cpp" line="232"/>
+        <source>Server still works in background, another client can now connect. Click on this icon to show control panel</source>
+        <translation>Serwer nadal działa w tle, inny klient może już się połączyć. Naciśnij tę ikonę aby pokazać panel kontrolny</translation>
+    </message>
+    <message>
+        <location filename="../ui/WindowMain/mainwindow.cpp" line="222"/>
         <source>Application now will run in background</source>
         <translation>Aplikacja działa od teraz w tle</translation>
     </message>
@@ -330,7 +356,7 @@ Czy na pewno chcesz wyjść z OpenMic?</translation>
 <context>
     <name>PacketSystem</name>
     <message>
-        <location filename="../net/packets/system.cpp" line="63"/>
+        <location filename="../net/packets/system.cpp" line="67"/>
         <source>Version mismatch between client and server!
 
 If you&apos;re using official apps, please make sure that both client and server have equal version numbers.
@@ -353,39 +379,35 @@ Wersja serwera: %2</translation>
         <translation>Połączenie odrzucone. Inny klient jest już połączony!</translation>
     </message>
     <message>
-        <location filename="../net/server.cpp" line="99"/>
+        <location filename="../net/server.cpp" line="97"/>
         <source>Server received invalid text data and closed connection as a result</source>
         <translation>Serwer otrzymał nieprawidłowe dane tekstowe i z tego powodu zamknął połączenie</translation>
     </message>
     <message>
-        <location filename="../net/server.cpp" line="114"/>
+        <location filename="../net/server.cpp" line="112"/>
         <source>Server did not recognize command sent by client and closed connection as a result</source>
         <translation>Serwer nie rozpoznał komendy wysłanej przez klienta i z tego powodu zamknął połączenie</translation>
-    </message>
-    <message>
-        <source>Invalid text data, disconnecting...</source>
-        <translation type="vanished">Nieprawidłowe dane, rozłączanie...</translation>
     </message>
 </context>
 <context>
     <name>Settings</name>
     <message>
-        <location filename="../settings.cpp" line="128"/>
+        <location filename="../settings.cpp" line="129"/>
         <source>OpenMic Server - Configuration validation failed</source>
         <translation>Serwer OpenMic - Błąd weryfikacji konfiguracji</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="129"/>
+        <location filename="../settings.cpp" line="130"/>
         <source>Invalid network communication port specified!</source>
         <translation>Ustawiono nieprawidłowy port komunikacji!</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="130"/>
+        <location filename="../settings.cpp" line="131"/>
         <source>Offline configuration change for communication port in network section were out of acceptable range. Network communication port have been reset to default value.</source>
         <translation>Zmiana zrobiona poza aplikacją obejmowała port komunikacyjny w sekcji Sieć, port ten był poza akceptowalnymi wartościami. Port komunikacji został zresetowany do domyślnej wartości.</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="131"/>
+        <location filename="../settings.cpp" line="132"/>
         <source>Network communication port have been set to: %1
 
 Previous (invalid) value: %2 (out of range, valid range: %3-%4)</source>
