@@ -52,7 +52,7 @@ void DeviceAuthDialog::onAuthCodeReceived(int authCode)
         settings->Set(DEVICE_PAIRED, knownIDsRaw);
 
         qDebug() << "Added" << server->connectedClientID << "to known devices list!";
-        accept();
+        server->isAuthorized = true;
     } else {
         qDebug() << "Received authCode is invalid!";
 
@@ -64,9 +64,12 @@ void DeviceAuthDialog::onAuthCodeReceived(int authCode)
 }
 
 void DeviceAuthDialog::onReject()
-{
-    qDebug() << "Auth dialog has been rejected";
+{    
+    if (!server->isAuthorized)
+    {
+        qDebug() << "Auth dialog has been rejected";
 
-    Server* server = &Server::getInstance();
-    server->serverDisconnect(CANCELED_AUTH_CODE_DIALOG);
+        Server* server = &Server::getInstance();
+        server->serverDisconnect(CANCELED_AUTH_CODE_DIALOG);
+    }
 }
