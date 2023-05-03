@@ -21,11 +21,6 @@ void AboutWindow::on_authorWebsite_clicked()
     QDesktopServices::openUrl(QUrl("https://grzyb.dev"));
 }
 
-void AboutWindow::on_openmicWebsite_clicked()
-{
-    QDesktopServices::openUrl(QUrl("https://openmic.grzyb.dev"));
-}
-
 void AboutWindow::on_srcCode_clicked()
 {
     QDesktopServices::openUrl(QUrl("https://github.com/GrzybDev/OpenMicServer"));

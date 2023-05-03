@@ -17,7 +17,6 @@ public:
 
 private slots:
     void on_authorWebsite_clicked();
-    void on_openmicWebsite_clicked();
     void on_srcCode_clicked();
     void on_linkedin_clicked();
     void on_reddit_clicked();

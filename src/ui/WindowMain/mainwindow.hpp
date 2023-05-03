@@ -36,8 +36,6 @@ private slots:
     void onDisconnect();
 
     void on_actionDisconnect_triggered();
-    void on_actionFAQ_triggered();
-    void on_actionTutorial_triggered();
     void on_actionAbout_triggered();
     void on_action_to_OpenMic_author_triggered();
     void on_action_to_VBCable_authors_triggered();

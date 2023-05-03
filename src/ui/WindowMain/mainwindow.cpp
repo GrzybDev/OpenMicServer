@@ -239,16 +239,6 @@ void MainWindow::on_actionDisconnect_triggered()
     openmic->RestartServer();
 }
 
-void MainWindow::on_actionFAQ_triggered()
-{
-    QDesktopServices::openUrl(QUrl("https://openmic.grzyb.dev/faq"));
-}
-
-void MainWindow::on_actionTutorial_triggered()
-{
-    QDesktopServices::openUrl(QUrl("https://openmic.grzyb.dev/tutorial"));
-}
-
 void MainWindow::on_actionAbout_triggered()
 {
     AboutWindow win;

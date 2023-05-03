@@ -122,13 +122,6 @@ Copyright &amp;copy; 2022 Marek Grzyb. All Rights Reserved.</string>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="openmicWebsite">
-        <property name="text">
-         <string>OpenMic Website</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
     <item>

@@ -9,7 +9,7 @@ on:
 jobs:
   build_linux:
     name: Build for Linux
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       SONAR_SCANNER_VERSION: 4.7.0.2747
       SONAR_SERVER_URL: "https://sonarcloud.io"
