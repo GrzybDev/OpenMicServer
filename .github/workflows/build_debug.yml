@@ -55,10 +55,8 @@ jobs:
 
     - name: Install CQTDeployer
       run: |
-        sudo snap install cqtdeployer
-        sudo snap connect cqtdeployer:process-control
-        sudo snap connect cqtdeployer:removable-media
-        sudo snap connect cqtdeployer:system-backup
+        wget https://github.com/QuasarApp/CQtDeployer/releases/download/v1.5.4.17/CQtDeployer_1.5.4.17_Linux_x86_64.deb
+        sudo apt install ./CQtDeployer_1.5.4.17_Linux_x86_64.deb
 
     - name: Build
       run: | 
